@@ -1,0 +1,118 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuthenticated() {
+      return request.auth != null && request.auth.token.email != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             getUserData().role == 'admin';
+    }
+
+    function isStaffOrAdmin() {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             (getUserData().role == 'admin' || getUserData().role == 'staff');
+    }
+
+    function isValidCabinet(data) {
+      return data.code is string && data.code.size() >= 1 &&
+             data.name is string && data.name.size() >= 1;
+    }
+
+    function isValidCompartment(data, compartmentId) {
+      return data.code is string && data.code.size() >= 1 &&
+             data.name is string && data.name.size() >= 1 &&
+             data.cabinetId is string && data.cabinetId.size() >= 1 &&
+             data.code == compartmentId;
+    }
+
+    function isValidAssignment(data) {
+      return !('isAssigned' in data) ||
+             data.isAssigned == false ||
+             (
+               data.isAssigned == true &&
+               data.assignment is map &&
+               data.assignment.assignedToName is string && data.assignment.assignedToName.size() >= 1 &&
+               data.assignment.assignedQuantity is number && data.assignment.assignedQuantity >= 1 &&
+               data.assignment.assignedStartDate is string && data.assignment.assignedStartDate.size() >= 1 &&
+               data.assignment.assignedEndDate is string && data.assignment.assignedEndDate.size() >= 1
+             );
+    }
+
+    function isValidOwner(owner) {
+      return owner in ["default-owner"];
+    }
+
+    function isValidProduct(data) {
+      return data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+             data.sku is string && data.sku.size() >= 1 && data.sku.size() <= 50 &&
+             data.quantity is number && data.quantity >= 0 &&
+             data.compartmentCode is string && data.compartmentCode.size() >= 1 &&
+             (!('description' in data) || data.description == null || (data.description is string && data.description.size() <= 2000)) &&
+             (!('owner' in data) || data.owner == null || (data.owner is string && isValidOwner(data.owner))) &&
+             isValidAssignment(data);
+    }
+
+
+    match /cabinets/{cabinetId} {
+      allow read: if isStaffOrAdmin();
+      allow create, update: if isStaffOrAdmin() && isValidCabinet(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /compartments/{compartmentId} {
+      allow read: if isStaffOrAdmin();
+      allow create: if isStaffOrAdmin() &&
+                    isValidCompartment(request.resource.data, compartmentId) &&
+                    !exists(/databases/$(database)/documents/compartments/$(compartmentId));
+      allow update: if isStaffOrAdmin() &&
+                    (
+                      (request.resource.data.code == compartmentId && isValidCompartment(request.resource.data, compartmentId)) ||
+                      (request.resource.data.code is string && request.resource.data.name is string && request.resource.data.cabinetId is string)
+                    ) &&
+                    request.resource.data.code == resource.data.code &&
+                    (!('createdAt' in resource.data) || request.resource.data.createdAt == resource.data.createdAt);
+      allow delete: if isAdmin();
+    }
+
+    match /products/{productId} {
+      allow read: if isStaffOrAdmin();
+      allow create, update: if isStaffOrAdmin() && isValidProduct(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isStaffOrAdmin();
+      allow create: if isAuthenticated() && (
+        request.resource.data.actorEmail == request.auth.token.email ||
+        request.resource.data.userEmail == request.auth.token.email ||
+        request.resource.data.actorId == request.auth.uid ||
+        request.resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      allow update, delete: if false; 
+    }
+
+    match /users/{userId} {
+      allow list: if isAdmin();
+
+      allow get: if isAuthenticated() && (isAdmin() || request.auth.uid == userId);
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() || 
+        (request.auth.uid == userId && request.resource.data.role == 'user')
+      );
+
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}
