@@ -19,6 +19,9 @@ export const renderDataMatrixToCanvas = (
       backgroundcolor: "ffffff",
     });
   } catch (e) {
-    toast.error("DataMatrix karekod oluşturulamadı: " + (e instanceof Error ? e.message : ""));
+    toast.error(
+      "DataMatrix karekod oluşturulamadı: " +
+        (e instanceof Error ? e.message : ""),
+    );
   }
 };

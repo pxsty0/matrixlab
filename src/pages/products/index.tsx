@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Package,
   Plus,
@@ -12,18 +12,14 @@ import {
   Layers,
   UserCheck,
   AlertCircle,
-} from 'lucide-react';
-import {
-  ProductAPI,
-  CabinetAPI,
-  CompartmentAPI,
-} from '../../services';
-import { Product, Cabinet, Compartment } from '../../types';
-import { PRODUCT_OWNERS } from '../../config/constants';
-import { Modal } from '../../components/common/Modal';
-import { ImagePreview } from '../../components/common/ImagePreview';
-import { HorizontalDataMatrixLabel } from '../../components/labels/HorizontalDataMatrixLabel';
-import { toast } from 'react-toastify';
+} from "lucide-react";
+import { ProductAPI, CabinetAPI, CompartmentAPI } from "../../services";
+import { Product, Cabinet, Compartment } from "../../types";
+import { PRODUCT_OWNERS } from "../../config/constants";
+import { Modal } from "../../components/common/Modal";
+import { ImagePreview } from "../../components/common/ImagePreview";
+import { HorizontalDataMatrixLabel } from "../../components/labels/HorizontalDataMatrixLabel";
+import { toast } from "react-toastify";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -34,39 +30,45 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const [search, setSearch] = useState('');
-  const [selectedCabinetId, setSelectedCabinetId] = useState('');
-  const [selectedCompartmentCode, setSelectedCompartmentCode] = useState('');
-  const [zimmetFilter, setZimmetFilter] = useState<'all' | 'assigned' | 'unassigned'>('all');
-  const [selectedOwner, setSelectedOwner] = useState<string>('all');
+  const [search, setSearch] = useState("");
+  const [selectedCabinetId, setSelectedCabinetId] = useState("");
+  const [selectedCompartmentCode, setSelectedCompartmentCode] = useState("");
+  const [zimmetFilter, setZimmetFilter] = useState<
+    "all" | "assigned" | "unassigned"
+  >("all");
+  const [selectedOwner, setSelectedOwner] = useState<string>("all");
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  const [formName, setFormName] = useState('');
-  const [formSku, setFormSku] = useState('');
-  const [formOwner, setFormOwner] = useState<string>('');
-  const [formDescription, setFormDescription] = useState('');
+  const [formName, setFormName] = useState("");
+  const [formSku, setFormSku] = useState("");
+  const [formOwner, setFormOwner] = useState<string>("");
+  const [formDescription, setFormDescription] = useState("");
   const [formQuantity, setFormQuantity] = useState<number>(0);
-  const [formCabinetId, setFormCabinetId] = useState('');
-  const [formCompartmentCode, setFormCompartmentCode] = useState('');
-  const [formImageUrl, setFormImageUrl] = useState('');
+  const [formCabinetId, setFormCabinetId] = useState("");
+  const [formCompartmentCode, setFormCompartmentCode] = useState("");
+  const [formImageUrl, setFormImageUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [labelModalProduct, setLabelModalProduct] = useState<Product | null>(null);
+  const [labelModalProduct, setLabelModalProduct] = useState<Product | null>(
+    null,
+  );
 
   useEffect(() => {
     if (router.isReady) {
-      if (typeof router.query.search === 'string') setSearch(router.query.search);
-      if (typeof router.query.cabinetId === 'string') setSelectedCabinetId(router.query.cabinetId);
-      if (typeof router.query.compartmentCode === 'string') {
+      if (typeof router.query.search === "string")
+        setSearch(router.query.search);
+      if (typeof router.query.cabinetId === "string")
+        setSelectedCabinetId(router.query.cabinetId);
+      if (typeof router.query.compartmentCode === "string") {
         setSelectedCompartmentCode(router.query.compartmentCode);
-      } else if (typeof router.query.compartmentId === 'string') {
+      } else if (typeof router.query.compartmentId === "string") {
         setSelectedCompartmentCode(router.query.compartmentId);
       }
-      if (router.query.new === 'true') {
+      if (router.query.new === "true") {
         setIsFormModalOpen(true);
       }
     }
@@ -90,11 +92,11 @@ export default function ProductsPage() {
       setCabinets(cabsData);
       setCompartments(compsData);
 
-      if (router.query.new === 'true') {
+      if (router.query.new === "true") {
         openNewProductModal();
       }
     } catch (_e) {
-      setError('Ürün verileri yüklenemedi.');
+      setError("Ürün verileri yüklenemedi.");
     } finally {
       setLoading(false);
     }
@@ -115,61 +117,69 @@ export default function ProductsPage() {
     setEditingProduct(null);
     const timestamp = Date.now().toString(36).toUpperCase().slice(-4);
     const randomDigits = Math.floor(100 + Math.random() * 900);
-    setFormName('');
+    setFormName("");
     setFormSku(`PRD-${timestamp}${randomDigits}`);
-    setFormOwner('');
-    setFormDescription('');
+    setFormOwner("");
+    setFormDescription("");
     setFormQuantity(1);
-    setFormCabinetId(cabinets[0]?.id || '');
+    setFormCabinetId(cabinets[0]?.id || "");
     setFormCompartmentCode(
-      (typeof router.query.compartmentCode === 'string' && router.query.compartmentCode) ||
-        (typeof router.query.compartmentId === 'string' && router.query.compartmentId) ||
+      (typeof router.query.compartmentCode === "string" &&
+        router.query.compartmentCode) ||
+        (typeof router.query.compartmentId === "string" &&
+          router.query.compartmentId) ||
         compartments[0]?.code ||
-        ''
+        "",
     );
-    setFormImageUrl('');
+    setFormImageUrl("");
     setIsFormModalOpen(true);
   };
 
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim() || !formSku.trim() || !formCompartmentCode) {
-      toast.warning('Lütfen ürün adı, stok kodu ve yerleştirileceği bölmeyi seçin.');
+      toast.warning(
+        "Lütfen ürün adı, stok kodu ve yerleştirileceği bölmeyi seçin.",
+      );
       return;
     }
     if (!formOwner) {
-      toast.warning('Lütfen malzeme sahibini seçin.');
+      toast.warning("Lütfen malzeme sahibini seçin.");
       return;
     }
 
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append('name', formName.trim());
-      formData.append('sku', formSku.trim().toUpperCase());
-      formData.append('owner', formOwner);
-      formData.append('description', formDescription.trim());
-      formData.append('quantity', String(formQuantity));
-      formData.append('compartmentCode', formCompartmentCode);
-      formData.append('imageUrl', formImageUrl.trim());
+      formData.append("name", formName.trim());
+      formData.append("sku", formSku.trim().toUpperCase());
+      formData.append("owner", formOwner);
+      formData.append("description", formDescription.trim());
+      formData.append("quantity", String(formQuantity));
+      formData.append("compartmentCode", formCompartmentCode);
+      formData.append("imageUrl", formImageUrl.trim());
 
       if (editingProduct) {
         await ProductAPI.update(editingProduct.id, formData);
-        toast.success('Ürün başarıyla güncellendi.');
+        toast.success("Ürün başarıyla güncellendi.");
       } else {
         await ProductAPI.create(formData);
-        toast.success('Yeni ürün başarıyla eklendi.');
+        toast.success("Yeni ürün başarıyla eklendi.");
       }
 
       setIsFormModalOpen(false);
       if (router.query.new) {
         const nextQuery = { ...router.query };
         delete nextQuery.new;
-        router.replace({ pathname: router.pathname, query: nextQuery }, undefined, { shallow: true });
+        router.replace(
+          { pathname: router.pathname, query: nextQuery },
+          undefined,
+          { shallow: true },
+        );
       }
       await fetchInitialData();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Ürün kaydedilemedi');
+      toast.error(err instanceof Error ? err.message : "Ürün kaydedilemedi");
     } finally {
       setIsSubmitting(false);
     }
@@ -178,38 +188,38 @@ export default function ProductsPage() {
   const handleQuickAdjust = async (
     e: React.MouseEvent,
     product: Product,
-    change: number
+    change: number,
   ) => {
     e.stopPropagation();
     try {
       const res = await ProductAPI.adjustStock(product.id, {
         change,
-        type: change > 0 ? 'IN' : 'OUT',
-        note: change > 0 ? '1 adet giriş' : '1 adet çıkış',
+        type: change > 0 ? "IN" : "OUT",
+        note: change > 0 ? "1 adet giriş" : "1 adet çıkış",
       });
       setProducts((prev) =>
-        prev.map((p) => (p.id === product.id ? res.product : p))
+        prev.map((p) => (p.id === product.id ? res.product : p)),
       );
       toast.success(
-        `${product.name} stoğu güncellendi (${change > 0 ? '+' : ''}${change})`
+        `${product.name} stoğu güncellendi (${change > 0 ? "+" : ""}${change})`,
       );
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Stok güncellenemedi');
+      toast.error(err instanceof Error ? err.message : "Stok güncellenemedi");
     }
   };
 
   const formFilteredCompartments = compartments.filter(
-    (c) => !formCabinetId || c.cabinetId === formCabinetId
+    (c) => !formCabinetId || c.cabinetId === formCabinetId,
   );
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 pb-4">
+      <div className="flex flex-col justify-between gap-3 border-b border-zinc-200 pb-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-lg font-semibold text-zinc-900 tracking-tight">
+          <h1 className="text-lg font-semibold tracking-tight text-zinc-900">
             Envanter & Ürünler
           </h1>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <p className="mt-0.5 text-xs text-zinc-500">
             Kayıtlı tüm malzemeler, konumları ve anlık stok adetleri.
           </p>
         </div>
@@ -217,41 +227,44 @@ export default function ProductsPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={openNewProductModal}
-            className="py-1.5 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition active:scale-[0.98]"
+            className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-800 active:scale-[0.98]"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="h-3.5 w-3.5" />
             <span>Yeni Ürün Ekle</span>
           </button>
         </div>
       </div>
 
-      <div className="bg-white p-3 rounded-xl border border-zinc-200 shadow-xs">
-        <div className="flex flex-col md:flex-row items-center gap-2.5">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1 w-full">
+      <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-xs">
+        <div className="flex flex-col items-center gap-2.5 md:flex-row">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="relative w-full flex-1"
+          >
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Ürün adı veya barkod ara..."
-              className="w-full pl-8 pr-16 py-1.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-zinc-900 focus:bg-white transition"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 py-1.5 pr-16 pl-8 text-xs transition focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             />
-            <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2" />
+            <Search className="absolute top-2 left-2.5 h-3.5 w-3.5 text-zinc-400" />
             <button
               type="submit"
-              className="absolute right-1 top-1 px-2.5 py-0.5 bg-zinc-900 text-white rounded text-[10px] font-medium hover:bg-zinc-800"
+              className="absolute top-1 right-1 rounded bg-zinc-900 px-2.5 py-0.5 text-[10px] font-medium text-white hover:bg-zinc-800"
             >
               Ara
             </button>
           </form>
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="flex w-full items-center gap-2 md:w-auto">
             <select
               value={selectedCabinetId}
               onChange={(e) => {
                 setSelectedCabinetId(e.target.value);
-                setSelectedCompartmentCode('');
+                setSelectedCompartmentCode("");
               }}
-              className="px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-zinc-50 text-zinc-800 focus:ring-1 focus:ring-zinc-900 flex-1 md:flex-none font-mono"
+              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
             >
               <option value="">Tüm Dolaplar</option>
               {cabinets.map((c) => (
@@ -264,11 +277,14 @@ export default function ProductsPage() {
             <select
               value={selectedCompartmentCode}
               onChange={(e) => setSelectedCompartmentCode(e.target.value)}
-              className="px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-zinc-50 text-zinc-800 focus:ring-1 focus:ring-zinc-900 flex-1 md:flex-none font-mono"
+              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
             >
               <option value="">Tüm Raflar</option>
               {compartments
-                .filter((cp) => !selectedCabinetId || cp.cabinetId === selectedCabinetId)
+                .filter(
+                  (cp) =>
+                    !selectedCabinetId || cp.cabinetId === selectedCabinetId,
+                )
                 .map((cp) => (
                   <option key={cp.id} value={cp.code}>
                     {cp.code}
@@ -279,7 +295,7 @@ export default function ProductsPage() {
             <select
               value={zimmetFilter}
               onChange={(e) => setZimmetFilter(e.target.value as any)}
-              className="px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-zinc-50 text-zinc-800 focus:ring-1 focus:ring-zinc-900 flex-1 md:flex-none"
+              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
             >
               <option value="all">Zimmet: Tümü</option>
               <option value="assigned">Sadece Zimmetliler</option>
@@ -289,7 +305,7 @@ export default function ProductsPage() {
             <select
               value={selectedOwner}
               onChange={(e) => setSelectedOwner(e.target.value)}
-              className="px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-zinc-50 text-zinc-800 focus:ring-1 focus:ring-zinc-900 flex-1 md:flex-none font-medium"
+              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
             >
               <option value="all">Sahip: Tümü</option>
               <option value="unassigned_owner">Sahipsiz / Belirtilmemiş</option>
@@ -301,273 +317,286 @@ export default function ProductsPage() {
             </select>
           </div>
 
-          <div className="flex items-center gap-0.5 bg-zinc-100 p-0.5 rounded-lg shrink-0 self-end md:self-auto">
+          <div className="flex shrink-0 items-center gap-0.5 self-end rounded-lg bg-zinc-100 p-0.5 md:self-auto">
             <button
-              onClick={() => setViewMode('grid')}
-              className={`p-1 rounded-md transition ${
-                viewMode === 'grid'
-                  ? 'bg-white text-zinc-900 shadow-xs'
-                  : 'text-zinc-500 hover:text-zinc-900'
+              onClick={() => setViewMode("grid")}
+              className={`rounded-md p-1 transition ${
+                viewMode === "grid"
+                  ? "bg-white text-zinc-900 shadow-xs"
+                  : "text-zinc-500 hover:text-zinc-900"
               }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
+              <LayoutGrid className="h-3.5 w-3.5" />
             </button>
             <button
-              onClick={() => setViewMode('list')}
-              className={`p-1 rounded-md transition ${
-                viewMode === 'list'
-                  ? 'bg-white text-zinc-900 shadow-xs'
-                  : 'text-zinc-500 hover:text-zinc-900'
+              onClick={() => setViewMode("list")}
+              className={`rounded-md p-1 transition ${
+                viewMode === "list"
+                  ? "bg-white text-zinc-900 shadow-xs"
+                  : "text-zinc-500 hover:text-zinc-900"
               }`}
             >
-              <List className="w-3.5 h-3.5" />
+              <List className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-2 text-zinc-500 text-xs">
-          <RefreshCw className="w-5 h-5 animate-spin text-zinc-600" />
+        <div className="flex flex-col items-center justify-center gap-2 py-20 text-xs text-zinc-500">
+          <RefreshCw className="h-5 w-5 animate-spin text-zinc-600" />
           <span>Ürünler yükleniyor...</span>
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-3 text-zinc-500">
-          <AlertCircle className="w-6 h-6 text-rose-500" />
+        <div className="flex flex-col items-center justify-center gap-3 py-24 text-zinc-500">
+          <AlertCircle className="h-6 w-6 text-rose-500" />
           <p className="text-sm text-zinc-700">{error}</p>
-          <button onClick={fetchInitialData} className="text-xs text-blue-600 hover:underline">Tekrar Dene</button>
+          <button
+            onClick={fetchInitialData}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            Tekrar Dene
+          </button>
         </div>
       ) : products.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-xl border border-zinc-200 text-zinc-500 text-xs">
+        <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center text-xs text-zinc-500">
           Filtrelere uygun ürün bulunamadı.
         </div>
-      ) : (() => {
-        const filteredProducts = products.filter((prod) => {
-          if (zimmetFilter === 'assigned') return !!prod.isAssigned;
-          if (zimmetFilter === 'unassigned') return !prod.isAssigned;
-          if (selectedOwner === 'unassigned_owner') {
-            if (prod.owner) return false;
-          } else if (selectedOwner !== 'all') {
-            if (prod.owner !== selectedOwner) return false;
-          }
-          return true;
-        });
+      ) : (
+        (() => {
+          const filteredProducts = products.filter((prod) => {
+            if (zimmetFilter === "assigned") return !!prod.isAssigned;
+            if (zimmetFilter === "unassigned") return !prod.isAssigned;
+            if (selectedOwner === "unassigned_owner") {
+              if (prod.owner) return false;
+            } else if (selectedOwner !== "all") {
+              if (prod.owner !== selectedOwner) return false;
+            }
+            return true;
+          });
 
-        if (filteredProducts.length === 0) {
-          return (
-            <div className="p-12 text-center bg-white rounded-xl border border-zinc-200 text-zinc-500 text-xs">
-              Seçilen filtrelere uygun ürün bulunamadı.
-            </div>
-          );
-        }
-
-        return viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
-            {filteredProducts.map((prod) => (
-              <div
-                key={prod.id}
-                onClick={() => router.push(`/products/detail?id=${prod.id}`)}
-                className="group relative bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 hover:shadow-xs transition flex flex-col justify-between cursor-pointer overflow-hidden"
-              >
-                <div>
-                  <div className="relative aspect-[16/10] w-full bg-zinc-100 overflow-hidden flex items-center justify-center border-b border-zinc-100">
-                    {prod.imageUrl ? (
-                      <img
-                        src={prod.imageUrl}
-                        alt={prod.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <Package className="w-8 h-8 text-zinc-300" />
-                    )}
-
-                    <div className="absolute top-2 left-2 flex items-center gap-1">
-                      <span className="bg-zinc-900/90 text-white text-[10px] font-mono px-1.5 py-0.5 rounded shadow-2xs">
-                        {prod.sku}
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setLabelModalProduct(prod);
-                      }}
-                      title="Etiket"
-                      className="absolute top-2 right-2 p-1 bg-white/90 hover:bg-white text-zinc-700 rounded shadow-xs transition"
-                    >
-                      <Grid className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="p-3 space-y-1.5">
-                    <div className="flex items-start justify-between gap-1.5">
-                      <h4 className="font-semibold text-zinc-900 text-xs line-clamp-2 leading-snug flex-1">
-                        {prod.name}
-                      </h4>
-                      <div className="shrink-0">
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
-                          {prod.owner}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1 text-[11px] text-zinc-500 pt-0.5">
-                      <Layers className="w-3 h-3 text-zinc-400 shrink-0" />
-                      <span className="truncate">
-                        {prod.compartment?.cabinet?.code} ➔ {prod.compartment?.name}
-                      </span>
-                    </div>
-
-                    {prod.description && (
-                      <p className="text-[11px] text-zinc-500 line-clamp-1 italic">
-                        {prod.description}
-                      </p>
-                    )}
-
-                    {prod.isAssigned && prod.assignment ? (
-                      <div className="pt-1">
-                        <span className="inline-flex items-center gap-1 font-bold text-[10px] px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs max-w-full">
-                          <UserCheck className="w-3 h-3 text-amber-700 shrink-0" />
-                          <span className="truncate">
-                            Zimmetli: {prod.assignment.assignedToName} ({prod.assignment.assignedQuantity ?? 0} adet)
-                          </span>
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="pt-1">
-                        <span className="text-[10px] text-zinc-400 font-medium">
-                          Depoda / Zimmetsiz
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="px-3 py-2 bg-zinc-50/70 border-t border-zinc-100 flex items-center justify-between gap-2">
-                  <div className="flex items-baseline gap-1">
-                    <span className="font-mono text-sm font-bold text-zinc-900">
-                      {prod.quantity}
-                    </span>
-                    <span className="text-[10px] text-zinc-500">
-                      adet
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={(e) => handleQuickAdjust(e, prod, -1)}
-                      disabled={prod.quantity <= 0}
-                      className="w-6 h-6 bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 rounded flex items-center justify-center transition disabled:opacity-40"
-                    >
-                      <Minus className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={(e) => handleQuickAdjust(e, prod, 1)}
-                      className="w-6 h-6 bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 rounded flex items-center justify-center transition"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
+          if (filteredProducts.length === 0) {
+            return (
+              <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center text-xs text-zinc-500">
+                Seçilen filtrelere uygun ürün bulunamadı.
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 text-[10px] font-semibold uppercase">
-                  <tr>
-                    <th className="p-3">Görsel</th>
-                    <th className="p-3">Ürün Adı</th>
-                    <th className="p-3">Sahip</th>
-                    <th className="p-3">Konum</th>
-                    <th className="p-3">Zimmet Durumu</th>
-                    <th className="p-3 text-right">Stok</th>
-                    <th className="p-3 text-center">İşlem</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-100 text-zinc-700">
+            );
+          }
+
+          return viewMode === "grid" ? (
+            <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {filteredProducts.map((prod) => (
+                <div
+                  key={prod.id}
+                  onClick={() => router.push(`/products/detail?id=${prod.id}`)}
+                  className="group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-xl border border-zinc-200 bg-white transition hover:border-zinc-300 hover:shadow-xs"
+                >
+                  <div>
+                    <div className="relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden border-b border-zinc-100 bg-zinc-100">
+                      {prod.imageUrl ? (
+                        <img
+                          src={prod.imageUrl}
+                          alt={prod.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <Package className="h-8 w-8 text-zinc-300" />
+                      )}
+
+                      <div className="absolute top-2 left-2 flex items-center gap-1">
+                        <span className="rounded bg-zinc-900/90 px-1.5 py-0.5 font-mono text-[10px] text-white shadow-2xs">
+                          {prod.sku}
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLabelModalProduct(prod);
+                        }}
+                        title="Etiket"
+                        className="absolute top-2 right-2 rounded bg-white/90 p-1 text-zinc-700 shadow-xs transition hover:bg-white"
+                      >
+                        <Grid className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="space-y-1.5 p-3">
+                      <div className="flex items-start justify-between gap-1.5">
+                        <h4 className="line-clamp-2 flex-1 text-xs leading-snug font-semibold text-zinc-900">
+                          {prod.name}
+                        </h4>
+                        <div className="shrink-0">
+                          <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
+                            {prod.owner}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 pt-0.5 text-[11px] text-zinc-500">
+                        <Layers className="h-3 w-3 shrink-0 text-zinc-400" />
+                        <span className="truncate">
+                          {prod.compartment?.cabinet?.code} ➔{" "}
+                          {prod.compartment?.name}
+                        </span>
+                      </div>
+
+                      {prod.description && (
+                        <p className="line-clamp-1 text-[11px] text-zinc-500 italic">
+                          {prod.description}
+                        </p>
+                      )}
+
+                      {prod.isAssigned && prod.assignment ? (
+                        <div className="pt-1">
+                          <span className="inline-flex max-w-full items-center gap-1 rounded-md border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900 shadow-2xs">
+                            <UserCheck className="h-3 w-3 shrink-0 text-amber-700" />
+                            <span className="truncate">
+                              Zimmetli: {prod.assignment.assignedToName} (
+                              {prod.assignment.assignedQuantity ?? 0} adet)
+                            </span>
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="pt-1">
+                          <span className="text-[10px] font-medium text-zinc-400">
+                            Depoda / Zimmetsiz
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 border-t border-zinc-100 bg-zinc-50/70 px-3 py-2">
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-mono text-sm font-bold text-zinc-900">
+                        {prod.quantity}
+                      </span>
+                      <span className="text-[10px] text-zinc-500">adet</span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => handleQuickAdjust(e, prod, -1)}
+                        disabled={prod.quantity <= 0}
+                        className="flex h-6 w-6 items-center justify-center rounded border border-zinc-200 bg-white text-zinc-700 transition hover:bg-zinc-100 disabled:opacity-40"
+                      >
+                        <Minus className="h-3 w-3" />
+                      </button>
+                      <button
+                        onClick={(e) => handleQuickAdjust(e, prod, 1)}
+                        className="flex h-6 w-6 items-center justify-center rounded border border-zinc-200 bg-white text-zinc-700 transition hover:bg-zinc-100"
+                      >
+                        <Plus className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="border-b border-zinc-200 bg-zinc-50 text-[10px] font-semibold text-zinc-500 uppercase">
+                    <tr>
+                      <th className="p-3">Görsel</th>
+                      <th className="p-3">Ürün Adı</th>
+                      <th className="p-3">Sahip</th>
+                      <th className="p-3">Konum</th>
+                      <th className="p-3">Zimmet Durumu</th>
+                      <th className="p-3 text-right">Stok</th>
+                      <th className="p-3 text-center">İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-100 text-zinc-700">
                     {filteredProducts.map((prod) => (
                       <tr
                         key={prod.id}
-                        onClick={() => router.push(`/products/detail?id=${prod.id}`)}
-                        className="hover:bg-zinc-50/70 cursor-pointer transition"
+                        onClick={() =>
+                          router.push(`/products/detail?id=${prod.id}`)
+                        }
+                        className="cursor-pointer transition hover:bg-zinc-50/70"
                       >
-                      <td className="p-3">
-                        {prod.imageUrl ? (
-                          <img
-                            src={prod.imageUrl}
-                            alt={prod.name}
-                            className="w-8 h-8 rounded object-cover border border-zinc-200"
-                          />
-                        ) : (
-                          <div className="w-8 h-8 rounded bg-zinc-100 flex items-center justify-center text-zinc-400">
-                            <Package className="w-4 h-4" />
+                        <td className="p-3">
+                          {prod.imageUrl ? (
+                            <img
+                              src={prod.imageUrl}
+                              alt={prod.name}
+                              className="h-8 w-8 rounded border border-zinc-200 object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-400">
+                              <Package className="h-4 w-4" />
+                            </div>
+                          )}
+                        </td>
+                        <td className="p-3 font-medium">
+                          <div className="font-semibold text-zinc-900">
+                            {prod.name}
                           </div>
-                        )}
-                      </td>
-                      <td className="p-3 font-medium">
-                        <div className="font-semibold text-zinc-900">
-                          {prod.name}
-                        </div>
-                        <div className="text-[10px] font-mono text-zinc-400">
-                          {prod.sku}
-                        </div>
-                      </td>
-                      <td className="p-3">
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
-                          {prod.owner}
-                        </span>
-                      </td>
-                      <td className="p-3 text-[11px] text-zinc-600">
-                        {prod.compartment?.cabinet?.code} ➔ {prod.compartment?.name}
-                      </td>
-                      <td className="p-3">
-                        {prod.isAssigned && prod.assignment ? (
-                          <span className="inline-flex items-center gap-1 font-bold text-[10px] px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
-                            <UserCheck className="w-3 h-3 text-amber-700 shrink-0" />
-                            <span>
-                              {prod.assignment.assignedToName} ({prod.assignment.assignedQuantity ?? 0} adet)
-                            </span>
+                          <div className="font-mono text-[10px] text-zinc-400">
+                            {prod.sku}
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
+                            {prod.owner}
                           </span>
-                        ) : (
-                          <span className="text-[11px] text-zinc-400">Depoda</span>
-                        )}
-                      </td>
-                      <td className="p-3 text-right font-mono font-bold text-zinc-900">
-                        {prod.quantity} adet
-                      </td>
-                      <td className="p-3">
-                        <div className="flex items-center justify-center gap-1">
-                          <button
-                            onClick={(e) => handleQuickAdjust(e, prod, -1)}
-                            disabled={prod.quantity <= 0}
-                            className="p-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <button
-                            onClick={(e) => handleQuickAdjust(e, prod, 1)}
-                            className="p-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        </td>
+                        <td className="p-3 text-[11px] text-zinc-600">
+                          {prod.compartment?.cabinet?.code} ➔{" "}
+                          {prod.compartment?.name}
+                        </td>
+                        <td className="p-3">
+                          {prod.isAssigned && prod.assignment ? (
+                            <span className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900">
+                              <UserCheck className="h-3 w-3 shrink-0 text-amber-700" />
+                              <span>
+                                {prod.assignment.assignedToName} (
+                                {prod.assignment.assignedQuantity ?? 0} adet)
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-[11px] text-zinc-400">
+                              Depoda
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right font-mono font-bold text-zinc-900">
+                          {prod.quantity} adet
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              onClick={(e) => handleQuickAdjust(e, prod, -1)}
+                              disabled={prod.quantity <= 0}
+                              className="rounded bg-zinc-100 p-1 text-zinc-700 hover:bg-zinc-200"
+                            >
+                              <Minus className="h-3 w-3" />
+                            </button>
+                            <button
+                              onClick={(e) => handleQuickAdjust(e, prod, 1)}
+                              className="rounded bg-zinc-100 p-1 text-zinc-700 hover:bg-zinc-200"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()
+      )}
 
       <Modal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
-        title={editingProduct ? 'Ürünü Düzenle' : 'Yeni Ürün Kaydet'}
+        title={editingProduct ? "Ürünü Düzenle" : "Yeni Ürün Kaydet"}
         maxWidth="md"
       >
         <form onSubmit={handleSaveProduct} className="space-y-3">
@@ -577,7 +606,7 @@ export default function ProductsPage() {
           />
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Ürün Adı *
             </label>
             <input
@@ -586,13 +615,13 @@ export default function ProductsPage() {
               value={formName}
               onChange={(e) => setFormName(e.target.value)}
               placeholder="Örn: ESP32 NodeMCU"
-              className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:ring-1 focus:ring-zinc-900 focus:outline-none"
+              className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-xs focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Stok / Ürün Kodu *
               </label>
               <input
@@ -601,19 +630,19 @@ export default function ProductsPage() {
                 value={formSku}
                 onChange={(e) => setFormSku(e.target.value)}
                 placeholder="Örn: PRD-ESP32"
-                className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:ring-1 focus:ring-zinc-900 focus:outline-none uppercase font-mono"
+                className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 font-mono text-xs uppercase focus:ring-1 focus:ring-zinc-900 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Malzeme Sahibi *
               </label>
               <select
                 required
                 value={formOwner}
                 onChange={(e) => setFormOwner(e.target.value)}
-                className="w-full px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white font-medium focus:ring-1 focus:ring-zinc-900 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-medium focus:ring-1 focus:ring-zinc-900 focus:outline-none"
               >
                 <option value="">Seçiniz (Zorunlu)...</option>
                 {PRODUCT_OWNERS.map((owner) => (
@@ -625,32 +654,36 @@ export default function ProductsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Mevcut Miktar (Adet)
               </label>
               <input
                 type="number"
                 min="0"
                 value={formQuantity}
-                onChange={(e) => setFormQuantity(parseInt(e.target.value, 10) || 0)}
-                className="w-full px-2.5 py-1.5 text-xs font-mono font-bold border border-zinc-200 rounded-lg"
+                onChange={(e) =>
+                  setFormQuantity(parseInt(e.target.value, 10) || 0)
+                }
+                className="w-full rounded-lg border border-zinc-200 px-2.5 py-1.5 font-mono text-xs font-bold"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
+          <div className="grid grid-cols-1 gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-2.5 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Dolap Seçimi *
               </label>
               <select
                 value={formCabinetId}
                 onChange={(e) => {
                   setFormCabinetId(e.target.value);
-                  const firstComp = compartments.find((c) => c.cabinetId === e.target.value);
-                  setFormCompartmentCode(firstComp?.code || '');
+                  const firstComp = compartments.find(
+                    (c) => c.cabinetId === e.target.value,
+                  );
+                  setFormCompartmentCode(firstComp?.code || "");
                 }}
-                className="w-full px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white font-mono"
+                className="w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 font-mono text-xs"
               >
                 <option value="">Dolap Seçin...</option>
                 {cabinets.map((c) => (
@@ -662,14 +695,14 @@ export default function ProductsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Raf Seçimi *
               </label>
               <select
                 required
                 value={formCompartmentCode}
                 onChange={(e) => setFormCompartmentCode(e.target.value)}
-                className="w-full px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white font-mono"
+                className="w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 font-mono text-xs"
               >
                 <option value="">Raf Seçin...</option>
                 {formFilteredCompartments.map((cp) => (
@@ -682,7 +715,7 @@ export default function ProductsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Açıklama (Opsiyonel)
             </label>
             <textarea
@@ -690,24 +723,24 @@ export default function ProductsPage() {
               value={formDescription}
               onChange={(e) => setFormDescription(e.target.value)}
               placeholder="Ürün açıklaması, teknik notlar veya özellikler..."
-              className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:ring-1 focus:ring-zinc-900 focus:outline-none resize-none"
+              className="w-full resize-none rounded-lg border border-zinc-200 px-3 py-1.5 text-xs focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             />
           </div>
 
-          <div className="pt-2 border-t border-zinc-100 flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2">
             <button
               type="button"
               onClick={() => setIsFormModalOpen(false)}
-              className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium rounded-lg"
+              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-200"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg disabled:opacity-50"
+              className="rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:opacity-50"
             >
-              {isSubmitting ? 'Kaydediliyor...' : 'Kaydet'}
+              {isSubmitting ? "Kaydediliyor..." : "Kaydet"}
             </button>
           </div>
         </form>
@@ -725,7 +758,11 @@ export default function ProductsPage() {
             title={labelModalProduct.name}
             owner={labelModalProduct.owner}
             cabinetCode={labelModalProduct.compartment?.cabinet?.code || null}
-            compartmentCode={labelModalProduct.compartmentCode || labelModalProduct.compartment?.code || null}
+            compartmentCode={
+              labelModalProduct.compartmentCode ||
+              labelModalProduct.compartment?.code ||
+              null
+            }
             code={labelModalProduct.dataMatrix}
             sku={labelModalProduct.sku}
             showActions={true}
@@ -735,4 +772,4 @@ export default function ProductsPage() {
       </Modal>
     </div>
   );
-};
+}

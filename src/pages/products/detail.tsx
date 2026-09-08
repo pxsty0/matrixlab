@@ -20,11 +20,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
-import {
-  ProductAPI,
-  CabinetAPI,
-  CompartmentAPI,
-} from "../../services";
+import { ProductAPI, CabinetAPI, CompartmentAPI } from "../../services";
 import { Product, Cabinet, Compartment } from "../../types";
 import { PRODUCT_OWNERS } from "../../config/constants";
 import { HorizontalDataMatrixLabel } from "../../components/labels/HorizontalDataMatrixLabel";
@@ -34,7 +30,7 @@ import { toast } from "react-toastify";
 
 export default function ProductDetailPage() {
   const router = useRouter();
-  const id = typeof router.query.id === 'string' ? router.query.id : '';
+  const id = typeof router.query.id === "string" ? router.query.id : "";
 
   const [product, setProduct] = useState<Product | null>(null);
   const [cabinets, setCabinets] = useState<Cabinet[]>([]);
@@ -93,7 +89,7 @@ export default function ProductDetailPage() {
       setCabinets(cabsData);
       setCompartments(compsData);
     } catch (_e) {
-      setError('Ürün detayları yüklenemedi.');
+      setError("Ürün detayları yüklenemedi.");
     } finally {
       setLoading(false);
     }
@@ -236,7 +232,9 @@ export default function ProductDetailPage() {
       );
       await fetchProduct();
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Zimmetleme işlemi başarısız");
+      toast.error(
+        err instanceof Error ? err.message : "Zimmetleme işlemi başarısız",
+      );
     } finally {
       setIsSubmittingAssign(false);
     }
@@ -248,7 +246,10 @@ export default function ProductDetailPage() {
 
     setIsSubmittingUnassign(true);
     try {
-      await ProductAPI.unassign(product.id, unassignReturnNote.trim() || undefined);
+      await ProductAPI.unassign(
+        product.id,
+        unassignReturnNote.trim() || undefined,
+      );
       setIsUnassignModalOpen(false);
       setUnassignReturnNote("");
       toast.success("Zimmet başarıyla teslim alındı / kaldırıldı.");
@@ -279,8 +280,8 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-2 text-zinc-500 text-xs">
-        <RefreshCw className="w-5 h-5 animate-spin text-zinc-600" />
+      <div className="flex flex-col items-center justify-center gap-2 py-20 text-xs text-zinc-500">
+        <RefreshCw className="h-5 w-5 animate-spin text-zinc-600" />
         <span>Yükleniyor...</span>
       </div>
     );
@@ -288,10 +289,15 @@ export default function ProductDetailPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-3 text-zinc-500">
-        <AlertCircle className="w-6 h-6 text-rose-500" />
+      <div className="flex flex-col items-center justify-center gap-3 py-24 text-zinc-500">
+        <AlertCircle className="h-6 w-6 text-rose-500" />
         <p className="text-sm text-zinc-700">{error}</p>
-        <button onClick={fetchProduct} className="text-xs text-blue-600 hover:underline">Tekrar Dene</button>
+        <button
+          onClick={fetchProduct}
+          className="text-xs text-blue-600 hover:underline"
+        >
+          Tekrar Dene
+        </button>
       </div>
     );
   }
@@ -299,94 +305,97 @@ export default function ProductDetailPage() {
   if (!product) return null;
 
   return (
-    <div className="space-y-5 max-w-5xl mx-auto">
+    <div className="mx-auto max-w-5xl space-y-5">
       <div className="flex items-center justify-between gap-3 border-b border-zinc-200 pb-3">
         <button
           onClick={() => router.back()}
-          className="px-2.5 py-1 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium rounded-md border border-zinc-200 flex items-center gap-1 transition cursor-pointer"
+          className="flex cursor-pointer items-center gap-1 rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="h-3.5 w-3.5" />
           <span>Geri</span>
         </button>
 
         <div className="flex items-center gap-2">
           <button
             onClick={handleOpenEdit}
-            className="px-2.5 py-1 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium rounded-md border border-zinc-200 flex items-center gap-1 transition cursor-pointer"
+            className="flex cursor-pointer items-center gap-1 rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50"
           >
-            <Edit2 className="w-3.5 h-3.5" />
+            <Edit2 className="h-3.5 w-3.5" />
             <span>Düzenle</span>
           </button>
 
           <button
             onClick={handleDelete}
-            className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium rounded-md border border-rose-200 flex items-center gap-1 transition cursor-pointer"
+            className="flex cursor-pointer items-center gap-1 rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 transition hover:bg-rose-100"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="h-3.5 w-3.5" />
             <span>Sil</span>
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-zinc-200 p-5 grid grid-cols-1 md:grid-cols-12 gap-5 shadow-xs">
-        <div className="md:col-span-4 flex flex-col items-center">
-          <div className="w-full aspect-square bg-zinc-100 rounded-lg border border-zinc-200 overflow-hidden flex items-center justify-center relative">
+      <div className="grid grid-cols-1 gap-5 rounded-xl border border-zinc-200 bg-white p-5 shadow-xs md:grid-cols-12">
+        <div className="flex flex-col items-center md:col-span-4">
+          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100">
             {product.imageUrl ? (
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             ) : (
-              <Package className="w-16 h-16 text-zinc-300" />
+              <Package className="h-16 w-16 text-zinc-300" />
             )}
           </div>
         </div>
 
-        <div className="md:col-span-8 space-y-4">
+        <div className="space-y-4 md:col-span-8">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-[11px] font-bold px-2 py-0.5 bg-zinc-100 text-zinc-800 rounded border border-zinc-200">
+            <div className="mb-1 flex items-center gap-2">
+              <span className="rounded border border-zinc-200 bg-zinc-100 px-2 py-0.5 font-mono text-[11px] font-bold text-zinc-800">
                 {product.sku}
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
+              <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
                 {product.owner}
               </span>
             </div>
 
-            <h1 className="text-lg font-bold text-zinc-900 leading-snug">
+            <h1 className="text-lg leading-snug font-bold text-zinc-900">
               {product.name}
             </h1>
           </div>
 
           <div
             onClick={() =>
-              router.push(`/storage?cabinetId=${product.compartment?.cabinetId}`)
+              router.push(
+                `/storage?cabinetId=${product.compartment?.cabinetId}`,
+              )
             }
-            className="p-3 bg-zinc-50 hover:bg-zinc-100/70 rounded-lg border border-zinc-200 flex items-center justify-between cursor-pointer transition"
+            className="flex cursor-pointer items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50 p-3 transition hover:bg-zinc-100/70"
           >
             <div className="flex items-center gap-2.5">
-              <Layers className="w-4 h-4 text-zinc-500" />
+              <Layers className="h-4 w-4 text-zinc-500" />
               <div>
-                <span className="text-[10px] text-zinc-400 uppercase font-medium">
+                <span className="text-[10px] font-medium text-zinc-400 uppercase">
                   Konum
                 </span>
-                <p className="text-xs font-semibold text-zinc-800 font-mono">
-                  {product.compartment?.cabinet?.code || "—"} ➔ {product.compartmentCode || product.compartment?.code}
+                <p className="font-mono text-xs font-semibold text-zinc-800">
+                  {product.compartment?.cabinet?.code || "—"} ➔{" "}
+                  {product.compartmentCode || product.compartment?.code}
                 </p>
               </div>
             </div>
-            <span className="text-[11px] text-zinc-500 font-medium">
+            <span className="text-[11px] font-medium text-zinc-500">
               Dolabı Aç ➔
             </span>
           </div>
 
           {product.isAssigned && product.assignment ? (
-            <div className="p-3.5 bg-amber-50/90 border-2 border-amber-300 rounded-xl space-y-3 shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-200/80 pb-2.5">
+            <div className="space-y-3 rounded-xl border-2 border-amber-300 bg-amber-50/90 p-3.5 shadow-xs">
+              <div className="flex flex-col justify-between gap-2 border-b border-amber-200/80 pb-2.5 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 font-bold text-xs px-2.5 py-1 rounded-md bg-amber-600 text-white shadow-xs">
-                    <UserCheck className="w-4 h-4" />
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-600 px-2.5 py-1 text-xs font-bold text-white shadow-xs">
+                    <UserCheck className="h-4 w-4" />
                     <span>BU ÜRÜN ZİMMETLİDİR</span>
                   </span>
                 </div>
@@ -395,9 +404,9 @@ export default function ProductDetailPage() {
                   <button
                     type="button"
                     onClick={handleOpenAssign}
-                    className="px-2.5 py-1 bg-white hover:bg-amber-100/80 border border-amber-300 text-amber-900 rounded-md text-xs font-semibold flex items-center gap-1 transition shadow-2xs"
+                    className="flex items-center gap-1 rounded-md border border-amber-300 bg-white px-2.5 py-1 text-xs font-semibold text-amber-900 shadow-2xs transition hover:bg-amber-100/80"
                   >
-                    <Edit2 className="w-3 h-3 text-amber-700" />
+                    <Edit2 className="h-3 w-3 text-amber-700" />
                     <span>Düzenle</span>
                   </button>
 
@@ -407,86 +416,93 @@ export default function ProductDetailPage() {
                       setUnassignReturnNote("");
                       setIsUnassignModalOpen(true);
                     }}
-                    className="px-2.5 py-1 bg-amber-700 hover:bg-amber-800 text-white rounded-md text-xs font-semibold flex items-center gap-1 transition shadow-xs"
+                    className="flex items-center gap-1 rounded-md bg-amber-700 px-2.5 py-1 text-xs font-semibold text-white shadow-xs transition hover:bg-amber-800"
                   >
-                    <UserX className="w-3.5 h-3.5" />
+                    <UserX className="h-3.5 w-3.5" />
                     <span>Zimmeti Teslim Al</span>
                   </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
-                <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200/70">
-                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider block">
+              <div className="grid grid-cols-1 gap-2.5 text-xs sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-lg border border-amber-200/70 bg-white/80 p-2.5">
+                  <span className="block text-[10px] font-bold tracking-wider text-amber-800 uppercase">
                     Zimmetlenen Kişi
                   </span>
-                  <p className="font-bold text-sm text-zinc-900 mt-0.5 truncate">
+                  <p className="mt-0.5 truncate text-sm font-bold text-zinc-900">
                     {product.assignment.assignedToName}
                   </p>
                 </div>
 
-                <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200/70">
-                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider block">
+                <div className="rounded-lg border border-amber-200/70 bg-white/80 p-2.5">
+                  <span className="block text-[10px] font-bold tracking-wider text-amber-800 uppercase">
                     Zimmet Adedi
                   </span>
-                  <p className="font-mono font-bold text-sm text-amber-950 mt-0.5">
+                  <p className="mt-0.5 font-mono text-sm font-bold text-amber-950">
                     {product.assignment.assignedQuantity ?? 0} adet
                   </p>
                 </div>
 
-                <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200/70">
-                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider block">
+                <div className="rounded-lg border border-amber-200/70 bg-white/80 p-2.5">
+                  <span className="block text-[10px] font-bold tracking-wider text-amber-800 uppercase">
                     Başlangıç Tarihi
                   </span>
-                  <p className="font-semibold text-zinc-800 flex items-center gap-1.5 mt-0.5">
-                    <Calendar className="w-3.5 h-3.5 text-amber-700" />
-                    <span>{product.assignment.assignedStartDate || product.assignment.assignedDate}</span>
+                  <p className="mt-0.5 flex items-center gap-1.5 font-semibold text-zinc-800">
+                    <Calendar className="h-3.5 w-3.5 text-amber-700" />
+                    <span>
+                      {product.assignment.assignedStartDate ||
+                        product.assignment.assignedDate}
+                    </span>
                   </p>
                 </div>
 
-                <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200/70">
-                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider block">
+                <div className="rounded-lg border border-amber-200/70 bg-white/80 p-2.5">
+                  <span className="block text-[10px] font-bold tracking-wider text-amber-800 uppercase">
                     Bitiş / Teslim Tarihi
                   </span>
-                  <p className="font-semibold text-zinc-800 flex items-center gap-1.5 mt-0.5">
-                    <Calendar className="w-3.5 h-3.5 text-amber-700" />
-                    <span>{product.assignment.assignedEndDate || 'Belirtilmedi'}</span>
+                  <p className="mt-0.5 flex items-center gap-1.5 font-semibold text-zinc-800">
+                    <Calendar className="h-3.5 w-3.5 text-amber-700" />
+                    <span>
+                      {product.assignment.assignedEndDate || "Belirtilmedi"}
+                    </span>
                   </p>
                 </div>
 
                 {product.assignment.assignedToPhone && (
-                  <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200/70 sm:col-span-1 lg:col-span-2">
-                    <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider block">
+                  <div className="rounded-lg border border-amber-200/70 bg-white/80 p-2.5 sm:col-span-1 lg:col-span-2">
+                    <span className="block text-[10px] font-bold tracking-wider text-amber-800 uppercase">
                       Telefon
                     </span>
                     <a
                       href={`tel:${product.assignment.assignedToPhone}`}
-                      className="font-semibold text-amber-900 hover:underline flex items-center gap-1.5 mt-0.5"
+                      className="mt-0.5 flex items-center gap-1.5 font-semibold text-amber-900 hover:underline"
                     >
-                      <Phone className="w-3.5 h-3.5 text-amber-700" />
+                      <Phone className="h-3.5 w-3.5 text-amber-700" />
                       <span>{product.assignment.assignedToPhone}</span>
                     </a>
                   </div>
                 )}
 
                 {product.assignment.assignedToEmail && (
-                  <div className="bg-white/80 p-2.5 rounded-lg border border-amber-200/70 sm:col-span-1 lg:col-span-2">
-                    <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider block">
+                  <div className="rounded-lg border border-amber-200/70 bg-white/80 p-2.5 sm:col-span-1 lg:col-span-2">
+                    <span className="block text-[10px] font-bold tracking-wider text-amber-800 uppercase">
                       E-posta
                     </span>
                     <a
                       href={`mailto:${product.assignment.assignedToEmail}`}
-                      className="font-semibold text-amber-900 hover:underline flex items-center gap-1.5 mt-0.5 truncate"
+                      className="mt-0.5 flex items-center gap-1.5 truncate font-semibold text-amber-900 hover:underline"
                     >
-                      <Mail className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-                      <span className="truncate">{product.assignment.assignedToEmail}</span>
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-amber-700" />
+                      <span className="truncate">
+                        {product.assignment.assignedToEmail}
+                      </span>
                     </a>
                   </div>
                 )}
               </div>
 
               {product.assignment.note && (
-                <div className="p-2.5 bg-white/90 rounded-lg border border-amber-200 text-xs text-zinc-800">
+                <div className="rounded-lg border border-amber-200 bg-white/90 p-2.5 text-xs text-zinc-800">
                   <span className="font-bold text-amber-900">
                     Açıklama / Not:{" "}
                   </span>
@@ -504,13 +520,13 @@ export default function ProductDetailPage() {
               )}
             </div>
           ) : (
-            <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3">
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
+                <span className="flex items-center gap-1 rounded border border-emerald-200 bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+                  <CheckCircle2 className="h-3 w-3" />
                   <span>Depoda / Zimmetsiz</span>
                 </span>
-                <span className="text-[11px] text-zinc-500 hidden sm:inline">
+                <span className="hidden text-[11px] text-zinc-500 sm:inline">
                   Bu ürün şu an herhangi bir personele zimmetli değildir.
                 </span>
               </div>
@@ -518,33 +534,33 @@ export default function ProductDetailPage() {
               <button
                 type="button"
                 onClick={handleOpenAssign}
-                className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition active:scale-[0.98] shadow-2xs"
+                className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-2xs transition hover:bg-zinc-800 active:scale-[0.98]"
               >
-                <UserCheck className="w-3.5 h-3.5" />
+                <UserCheck className="h-3.5 w-3.5" />
                 <span>Ürünü Zimmetle</span>
               </button>
             </div>
           )}
 
           {product.description && (
-            <div className="p-3 bg-zinc-50 rounded-lg border border-zinc-200">
-              <span className="text-[10px] text-zinc-400 uppercase font-semibold block mb-1">
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+              <span className="mb-1 block text-[10px] font-semibold text-zinc-400 uppercase">
                 Açıklama / Not
               </span>
-              <p className="text-xs text-zinc-700 whitespace-pre-wrap leading-relaxed">
+              <p className="text-xs leading-relaxed whitespace-pre-wrap text-zinc-700">
                 {product.description}
               </p>
             </div>
           )}
 
-          <div className="p-3.5 bg-zinc-50 rounded-lg border border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-col justify-between gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3.5 sm:flex-row sm:items-center">
             <div>
               <span className="text-[11px] text-zinc-500">Mevcut Stok</span>
-              <div className="flex items-baseline gap-1.5 mt-0.5">
+              <div className="mt-0.5 flex items-baseline gap-1.5">
                 <span className="font-mono text-2xl font-bold text-zinc-900">
                   {product.quantity}
                 </span>
-                <span className="text-xs text-zinc-500 font-mono">adet</span>
+                <span className="font-mono text-xs text-zinc-500">adet</span>
               </div>
             </div>
 
@@ -555,9 +571,9 @@ export default function ProductDetailPage() {
                   setAdjustAmount(1);
                   setIsAdjustModalOpen(true);
                 }}
-                className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-md text-xs font-medium flex items-center gap-1 transition"
+                className="flex items-center gap-1 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-800"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="h-3.5 w-3.5" />
                 <span>Giriş</span>
               </button>
 
@@ -567,9 +583,9 @@ export default function ProductDetailPage() {
                   setAdjustAmount(1);
                   setIsAdjustModalOpen(true);
                 }}
-                className="px-3 py-1.5 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 rounded-md text-xs font-medium flex items-center gap-1 transition"
+                className="flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-800 transition hover:bg-zinc-50"
               >
-                <Minus className="w-3.5 h-3.5" />
+                <Minus className="h-3.5 w-3.5" />
                 <span>Çıkış</span>
               </button>
 
@@ -581,49 +597,53 @@ export default function ProductDetailPage() {
                   setTransferTargetCompartmentCode("");
                   setIsTransferModalOpen(true);
                 }}
-                className="px-3 py-1.5 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 rounded-md text-xs font-medium flex items-center gap-1 transition"
+                className="flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-800 transition hover:bg-zinc-50"
               >
-                <ArrowRightLeft className="w-3.5 h-3.5" />
+                <ArrowRightLeft className="h-3.5 w-3.5" />
                 <span>Taşı</span>
               </button>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-3 text-[11px] text-zinc-500">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-3 text-[11px] text-zinc-500">
             <div className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+              <Calendar className="h-3.5 w-3.5 text-zinc-400" />
               <span>Oluşturulma:</span>
               <span className="font-medium text-zinc-700">
-                {product.createdAt ? new Date(product.createdAt).toLocaleString("tr-TR", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }) : "—"}
+                {product.createdAt
+                  ? new Date(product.createdAt).toLocaleString("tr-TR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "—"}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-zinc-400" />
+              <Clock className="h-3.5 w-3.5 text-zinc-400" />
               <span>Son Güncelleme:</span>
               <span className="font-medium text-zinc-700">
-                {product.updatedAt ? new Date(product.updatedAt).toLocaleString("tr-TR", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }) : "—"}
+                {product.updatedAt
+                  ? new Date(product.updatedAt).toLocaleString("tr-TR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "—"}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
         <div className="md:col-span-5">
-          <div className="bg-white rounded-xl border border-zinc-200 p-3 shadow-xs space-y-2">
-            <h4 className="font-semibold text-xs text-zinc-900 border-b border-zinc-100 pb-1.5">
+          <div className="space-y-2 rounded-xl border border-zinc-200 bg-white p-3 shadow-xs">
+            <h4 className="border-b border-zinc-100 pb-1.5 text-xs font-semibold text-zinc-900">
               DataMatrix Ürün Etiketi
             </h4>
             <HorizontalDataMatrixLabel
@@ -631,7 +651,9 @@ export default function ProductDetailPage() {
               title={product.name}
               owner={product.owner}
               cabinetCode={product.compartment?.cabinet?.code || null}
-              compartmentCode={product.compartmentCode || product.compartment?.code || null}
+              compartmentCode={
+                product.compartmentCode || product.compartment?.code || null
+              }
               code={product.dataMatrix}
               sku={product.sku}
               showActions={true}
@@ -640,19 +662,20 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        <div className="md:col-span-7 bg-white rounded-xl border border-zinc-200 p-4 shadow-xs space-y-3">
+        <div className="space-y-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-xs md:col-span-7">
           <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5">
             <div className="flex items-center gap-1.5">
-              <History className="w-3.5 h-3.5 text-zinc-500" />
-              <h3 className="font-semibold text-xs text-zinc-900">
-                İşlem ve Stok Geçmişi ({(product.auditLogs || product.stockMovements)?.length ?? 0})
+              <History className="h-3.5 w-3.5 text-zinc-500" />
+              <h3 className="text-xs font-semibold text-zinc-900">
+                İşlem ve Stok Geçmişi (
+                {(product.auditLogs || product.stockMovements)?.length ?? 0})
               </h3>
             </div>
           </div>
 
           {(product.auditLogs || product.stockMovements) &&
           (product.auditLogs || product.stockMovements)!.length > 0 ? (
-            <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+            <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
               {(product.auditLogs || product.stockMovements)!.map((log) => {
                 const hasChange =
                   typeof log.change === "number" && log.change !== 0;
@@ -671,40 +694,40 @@ export default function ProductDetailPage() {
                 return (
                   <div
                     key={log.id}
-                    className="p-3 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col gap-1.5 text-xs"
+                    className="flex flex-col gap-1.5 rounded-lg border border-zinc-100 bg-zinc-50 p-3 text-xs"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span
-                          className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                          className={`rounded px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                             log.type === "IN"
-                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                              ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
                               : log.type === "OUT"
-                              ? "bg-rose-50 text-rose-800 border border-rose-200"
-                              : log.type === "TRANSFER"
-                              ? "bg-blue-50 text-blue-800 border border-blue-200"
-                              : "bg-zinc-100 text-zinc-800 border border-zinc-200"
+                                ? "border border-rose-200 bg-rose-50 text-rose-800"
+                                : log.type === "TRANSFER"
+                                  ? "border border-blue-200 bg-blue-50 text-blue-800"
+                                  : "border border-zinc-200 bg-zinc-100 text-zinc-800"
                           }`}
                         >
                           {log.type}
                         </span>
-                        <span className="text-[11px] text-zinc-400 font-mono">
+                        <span className="font-mono text-[11px] text-zinc-400">
                           {formattedDate}
                         </span>
                         {(log.actorEmail || log.actorName) && (
-                          <span className="text-[10px] bg-zinc-100 border border-zinc-200 text-zinc-700 font-medium font-mono px-1.5 py-0.5 rounded">
+                          <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[10px] font-medium text-zinc-700">
                             {log.actorName || log.actorEmail}
                           </span>
                         )}
                       </div>
 
                       {hasChange && (
-                        <div className="text-right shrink-0 font-mono">
+                        <div className="shrink-0 text-right font-mono">
                           <span
-                            className={`font-bold px-1.5 py-0.5 rounded text-xs ${
+                            className={`rounded px-1.5 py-0.5 text-xs font-bold ${
                               isPositive
-                                ? "text-emerald-700 bg-emerald-50"
-                                : "text-rose-700 bg-rose-50"
+                                ? "bg-emerald-50 text-emerald-700"
+                                : "bg-rose-50 text-rose-700"
                             }`}
                           >
                             {isPositive ? `+${log.change}` : log.change} adet
@@ -713,7 +736,7 @@ export default function ProductDetailPage() {
                       )}
                     </div>
 
-                    <p className="text-zinc-700 text-xs leading-relaxed font-normal break-words">
+                    <p className="text-xs leading-relaxed font-normal break-words text-zinc-700">
                       {log.details || "-"}
                     </p>
                   </div>
@@ -721,7 +744,7 @@ export default function ProductDetailPage() {
               })}
             </div>
           ) : (
-            <p className="text-xs text-zinc-400 text-center py-6">
+            <p className="py-6 text-center text-xs text-zinc-400">
               Geçmiş kaydı bulunmuyor.
             </p>
           )}
@@ -739,7 +762,7 @@ export default function ProductDetailPage() {
             <button
               type="button"
               onClick={() => setAdjustType("IN")}
-              className={`flex-1 py-1 text-xs font-medium rounded-md transition ${
+              className={`flex-1 rounded-md py-1 text-xs font-medium transition ${
                 adjustType === "IN"
                   ? "bg-white text-zinc-900 shadow-xs"
                   : "text-zinc-600 hover:text-zinc-900"
@@ -750,7 +773,7 @@ export default function ProductDetailPage() {
             <button
               type="button"
               onClick={() => setAdjustType("OUT")}
-              className={`flex-1 py-1 text-xs font-medium rounded-md transition ${
+              className={`flex-1 rounded-md py-1 text-xs font-medium transition ${
                 adjustType === "OUT"
                   ? "bg-white text-zinc-900 shadow-xs"
                   : "text-zinc-600 hover:text-zinc-900"
@@ -761,7 +784,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Miktar (Adet)
             </label>
             <input
@@ -772,12 +795,12 @@ export default function ProductDetailPage() {
               onChange={(e) =>
                 setAdjustAmount(Math.max(1, parseInt(e.target.value, 10) || 1))
               }
-              className="w-full px-3 py-1.5 font-mono text-sm font-bold border border-zinc-200 rounded-lg text-center"
+              className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-center font-mono text-sm font-bold"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               İşlem Notu (Opsiyonel)
             </label>
             <input
@@ -785,22 +808,22 @@ export default function ProductDetailPage() {
               value={adjustNote}
               onChange={(e) => setAdjustNote(e.target.value)}
               placeholder="Örn: Sipariş teslim alındı..."
-              className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg"
+              className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-xs"
             />
           </div>
 
-          <div className="pt-2 border-t border-zinc-100 flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2">
             <button
               type="button"
               onClick={() => setIsAdjustModalOpen(false)}
-              className="px-3 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-lg"
+              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={isSubmittingAdjust}
-              className="px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg"
+              className="rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
             >
               {isSubmittingAdjust ? "İşleniyor..." : "Güncelle"}
             </button>
@@ -816,13 +839,13 @@ export default function ProductDetailPage() {
       >
         <form onSubmit={handleTransferSubmit} className="space-y-3">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Hedef Dolap *
             </label>
             <select
               value={transferTargetCabinetId}
               onChange={(e) => setTransferTargetCabinetId(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white font-mono"
+              className="w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 font-mono text-xs"
             >
               <option value="">Dolap Seçin...</option>
               {cabinets.map((c) => (
@@ -834,14 +857,14 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Hedef Raf *
             </label>
             <select
               required
               value={transferTargetCompartmentCode}
               onChange={(e) => setTransferTargetCompartmentCode(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white font-mono"
+              className="w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 font-mono text-xs"
             >
               <option value="">Raf Seçin...</option>
               {compartments
@@ -859,7 +882,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Taşıma Notu
             </label>
             <input
@@ -867,22 +890,22 @@ export default function ProductDetailPage() {
               value={transferNote}
               onChange={(e) => setTransferNote(e.target.value)}
               placeholder="Örn: Yeni kutuya aktarıldı"
-              className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg"
+              className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-xs"
             />
           </div>
 
-          <div className="pt-2 border-t border-zinc-100 flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2">
             <button
               type="button"
               onClick={() => setIsTransferModalOpen(false)}
-              className="px-3 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-lg"
+              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={isSubmittingTransfer || !transferTargetCompartmentCode}
-              className="px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg disabled:opacity-50"
+              className="rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:opacity-50"
             >
               {isSubmittingTransfer ? "Taşınıyor..." : "Kaydet"}
             </button>
@@ -903,7 +926,7 @@ export default function ProductDetailPage() {
           />
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Ürün Adı *
             </label>
             <input
@@ -911,13 +934,13 @@ export default function ProductDetailPage() {
               required
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg"
+              className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 text-xs"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Stok / Ürün Kodu *
               </label>
               <input
@@ -925,19 +948,19 @@ export default function ProductDetailPage() {
                 required
                 value={editSku}
                 onChange={(e) => setEditSku(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg uppercase font-mono"
+                className="w-full rounded-lg border border-zinc-200 px-3 py-1.5 font-mono text-xs uppercase"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-zinc-700">
                 Malzeme Sahibi *
               </label>
               <select
                 required
                 value={editOwner}
                 onChange={(e) => setEditOwner(e.target.value)}
-                className="w-full px-2.5 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white font-medium focus:ring-1 focus:ring-zinc-900 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-medium focus:ring-1 focus:ring-zinc-900 focus:outline-none"
               >
                 <option value="">Seçiniz (Zorunlu)...</option>
                 {PRODUCT_OWNERS.map((owner) => (
@@ -950,7 +973,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="mb-1 block text-xs font-medium text-zinc-700">
               Açıklama (Opsiyonel)
             </label>
             <textarea
@@ -958,22 +981,22 @@ export default function ProductDetailPage() {
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
               placeholder="Ürün hakkında teknik özellikler, notlar veya detaylar..."
-              className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:ring-1 focus:ring-zinc-900 focus:outline-none resize-none"
+              className="w-full resize-none rounded-lg border border-zinc-200 px-3 py-1.5 text-xs focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             />
           </div>
 
-          <div className="pt-2 border-t border-zinc-100 flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2">
             <button
               type="button"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-3 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-lg"
+              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={isSubmittingEdit}
-              className="px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg"
+              className="rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
             >
               {isSubmittingEdit ? "Güncelleniyor..." : "Kaydet"}
             </button>
@@ -990,17 +1013,17 @@ export default function ProductDetailPage() {
         maxWidth="md"
       >
         <form onSubmit={handleAssignSubmit} className="space-y-3.5">
-          <div className="p-2.5 bg-amber-50 rounded-lg border border-amber-200 text-xs text-amber-900 flex items-center gap-2">
-            <UserCheck className="w-4 h-4 text-amber-600 shrink-0" />
+          <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900">
+            <UserCheck className="h-4 w-4 shrink-0 text-amber-600" />
             <span>
               Bu ürün için zimmetlenen personel iletişim ve tarih bilgilerini
               giriniz.
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold text-zinc-800 mb-1">
+              <label className="mb-1 block text-xs font-semibold text-zinc-800">
                 Zimmetlenen Kişi (Ad Soyad) *
               </label>
               <input
@@ -1014,12 +1037,12 @@ export default function ProductDetailPage() {
                   })
                 }
                 placeholder="Örn: Ad Soyad"
-                className="w-full px-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-800 mb-1">
+              <label className="mb-1 block text-xs font-semibold text-zinc-800">
                 Zimmet Adedi *
               </label>
               <input
@@ -1042,21 +1065,21 @@ export default function ProductDetailPage() {
                     ),
                   })
                 }
-                className="w-full px-3 py-2 text-xs font-mono font-bold border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border-zinc-200 px-3 py-2 font-mono text-xs font-bold focus:ring-1 focus:ring-amber-500 focus:outline-none"
               />
-              <span className="text-[10px] text-zinc-500 mt-0.5 block">
+              <span className="mt-0.5 block text-[10px] text-zinc-500">
                 Mevcut Depo Stoğu: <strong>{product.quantity} adet</strong>
               </span>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold text-zinc-800 mb-1">
+              <label className="mb-1 block text-xs font-semibold text-zinc-800">
                 Telefon Numarası
               </label>
               <div className="relative">
-                <Phone className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                <Phone className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-zinc-400" />
                 <input
                   type="tel"
                   value={assignForm.assignedToPhone}
@@ -1067,17 +1090,17 @@ export default function ProductDetailPage() {
                     })
                   }
                   placeholder="05XX XXX XX XX"
-                  className="w-full pl-8 pr-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  className="w-full rounded-lg border border-zinc-200 py-2 pr-3 pl-8 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-800 mb-1">
+              <label className="mb-1 block text-xs font-semibold text-zinc-800">
                 E-posta Adresi
               </label>
               <div className="relative">
-                <Mail className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                <Mail className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-zinc-400" />
                 <input
                   type="email"
                   value={assignForm.assignedToEmail}
@@ -1088,19 +1111,19 @@ export default function ProductDetailPage() {
                     })
                   }
                   placeholder="ornek@eposta.com"
-                  className="w-full pl-8 pr-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  className="w-full rounded-lg border border-zinc-200 py-2 pr-3 pl-8 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold text-zinc-800 mb-1">
+              <label className="mb-1 block text-xs font-semibold text-zinc-800">
                 Zimmet Başlangıç Tarihi *
               </label>
               <div className="relative">
-                <Calendar className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                <Calendar className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-zinc-400" />
                 <input
                   type="date"
                   required
@@ -1111,17 +1134,17 @@ export default function ProductDetailPage() {
                       assignedStartDate: e.target.value,
                     })
                   }
-                  className="w-full pl-8 pr-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500 bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-white py-2 pr-3 pl-8 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-800 mb-1">
+              <label className="mb-1 block text-xs font-semibold text-zinc-800">
                 Zimmet Bitiş Tarihi *
               </label>
               <div className="relative">
-                <Calendar className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+                <Calendar className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-zinc-400" />
                 <input
                   type="date"
                   required
@@ -1133,14 +1156,14 @@ export default function ProductDetailPage() {
                       assignedEndDate: e.target.value,
                     })
                   }
-                  className="w-full pl-8 pr-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500 bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-white py-2 pr-3 pl-8 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-800 mb-1">
+            <label className="mb-1 block text-xs font-semibold text-zinc-800">
               Açıklama / Not
             </label>
             <textarea
@@ -1150,24 +1173,24 @@ export default function ProductDetailPage() {
                 setAssignForm({ ...assignForm, note: e.target.value })
               }
               placeholder="Örn: Proje süresince kullanılmak üzere teslim edildi..."
-              className="w-full px-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
+              className="w-full resize-none rounded-lg border border-zinc-200 px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
             />
           </div>
 
-          <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2.5">
             <button
               type="button"
               onClick={() => setIsAssignModalOpen(false)}
-              className="px-3.5 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-lg hover:bg-zinc-200 transition"
+              className="rounded-lg bg-zinc-100 px-3.5 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={isSubmittingAssign || !assignForm.assignedToName.trim()}
-              className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium rounded-lg disabled:opacity-50 transition flex items-center gap-1.5 shadow-xs"
+              className="flex items-center gap-1.5 rounded-lg bg-amber-600 px-4 py-1.5 text-xs font-medium text-white shadow-xs transition hover:bg-amber-700 disabled:opacity-50"
             >
-              <UserCheck className="w-3.5 h-3.5" />
+              <UserCheck className="h-3.5 w-3.5" />
               <span>
                 {isSubmittingAssign ? "Kaydediliyor..." : "Zimmeti Kaydet"}
               </span>
@@ -1183,11 +1206,11 @@ export default function ProductDetailPage() {
         maxWidth="sm"
       >
         <form onSubmit={handleUnassignSubmit} className="space-y-3.5">
-          <div className="p-3 bg-zinc-50 rounded-lg border border-zinc-200 text-xs text-zinc-700 space-y-1.5">
+          <div className="space-y-1.5 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
             <p className="font-semibold text-zinc-900">
               Bu ürünün zimmetini kaldırmak istediğinize emin misiniz?
             </p>
-            <div className="text-[11px] text-zinc-600 space-y-0.5 pt-1 border-t border-zinc-200/70">
+            <div className="space-y-0.5 border-t border-zinc-200/70 pt-1 text-[11px] text-zinc-600">
               <p>
                 Zimmetli Kişi:{" "}
                 <strong className="text-zinc-800">
@@ -1196,11 +1219,11 @@ export default function ProductDetailPage() {
               </p>
               <p>
                 İade Edilecek Adet:{" "}
-                <strong className="text-emerald-700 font-mono">
+                <strong className="font-mono text-emerald-700">
                   +{product.assignment?.assignedQuantity ?? 0} adet
                 </strong>
               </p>
-              <p className="text-[10px] text-zinc-500 pt-0.5">
+              <p className="pt-0.5 text-[10px] text-zinc-500">
                 (İşlem sonrasında mevcut {product.quantity} adet olan depo stoğu{" "}
                 <strong>
                   {product.quantity +
@@ -1213,7 +1236,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-800 mb-1">
+            <label className="mb-1 block text-xs font-semibold text-zinc-800">
               Teslim Alma Notu (İsteğe Bağlı)
             </label>
             <input
@@ -1221,24 +1244,24 @@ export default function ProductDetailPage() {
               value={unassignReturnNote}
               onChange={(e) => setUnassignReturnNote(e.target.value)}
               placeholder="Örn: Sağlam ve eksiksiz teslim alındı."
-              className="w-full px-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-500"
+              className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-xs focus:ring-1 focus:ring-zinc-500 focus:outline-none"
             />
           </div>
 
-          <div className="pt-2 border-t border-zinc-100 flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2">
             <button
               type="button"
               onClick={() => setIsUnassignModalOpen(false)}
-              className="px-3.5 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-lg hover:bg-zinc-200 transition"
+              className="rounded-lg bg-zinc-100 px-3.5 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200"
             >
               İptal
             </button>
             <button
               type="submit"
               disabled={isSubmittingUnassign}
-              className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium rounded-lg disabled:opacity-50 transition flex items-center gap-1.5 shadow-xs"
+              className="flex items-center gap-1.5 rounded-lg bg-rose-600 px-4 py-1.5 text-xs font-medium text-white shadow-xs transition hover:bg-rose-700 disabled:opacity-50"
             >
-              <UserX className="w-3.5 h-3.5" />
+              <UserX className="h-3.5 w-3.5" />
               <span>
                 {isSubmittingUnassign ? "İşleniyor..." : "Zimmeti Teslim Al"}
               </span>
@@ -1248,4 +1271,4 @@ export default function ProductDetailPage() {
       </Modal>
     </div>
   );
-};
+}

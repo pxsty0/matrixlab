@@ -323,39 +323,39 @@ export const DataMatrixScannerModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-4 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] bg-black/50 backdrop-blur-xs">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border border-zinc-200 flex flex-col max-h-[88vh] text-zinc-900">
-        <div className="px-4 py-3 bg-zinc-900 text-white flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-3 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] backdrop-blur-xs sm:p-4">
+      <div className="flex max-h-[88vh] w-full max-w-md flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white text-zinc-900 shadow-xl">
+        <div className="flex items-center justify-between bg-zinc-900 px-4 py-3 text-white">
           <div className="flex items-center gap-2">
-            <Camera className="w-4 h-4 text-zinc-300" />
-            <h3 className="font-semibold text-xs text-zinc-100">
+            <Camera className="h-4 w-4 text-zinc-300" />
+            <h3 className="text-xs font-semibold text-zinc-100">
               Kamera DataMatrix Okuyucu
             </h3>
           </div>
           <button
             onClick={handleCloseModal}
-            className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+            className="rounded-md p-1 text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="p-4 overflow-y-auto flex-1 flex flex-col items-center">
+        <div className="flex flex-1 flex-col items-center overflow-y-auto p-4">
           {!scanResult && (
-            <div className="relative w-full max-w-[320px] aspect-square rounded-xl overflow-hidden bg-black border border-zinc-800 flex flex-col items-center justify-center">
-              <div id={scannerContainerId} className="w-full h-full" />
+            <div className="relative flex aspect-square w-full max-w-[320px] flex-col items-center justify-center overflow-hidden rounded-xl border border-zinc-800 bg-black">
+              <div id={scannerContainerId} className="h-full w-full" />
 
               {isScanning && (
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                  <div className="relative w-[210px] h-[210px] border border-white/40 rounded-lg">
-                    <div className="absolute left-2 right-2 h-0.5 bg-red-500/90 scanner-laser" />
+                  <div className="relative h-[210px] w-[210px] rounded-lg border border-white/40">
+                    <div className="scanner-laser absolute right-2 left-2 h-0.5 bg-red-500/90" />
                   </div>
                 </div>
               )}
 
               {isLoadingLookup && (
-                <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-white gap-2 text-xs">
-                  <RefreshCw className="w-5 h-5 animate-spin text-zinc-300" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/70 text-xs text-white">
+                  <RefreshCw className="h-5 w-5 animate-spin text-zinc-300" />
                   <span>Sorgulanıyor...</span>
                 </div>
               )}
@@ -363,11 +363,11 @@ export const DataMatrixScannerModal = ({
           )}
 
           {rawDetectedText && (
-            <div className="w-full mt-3 p-3 bg-zinc-900 text-white rounded-xl border border-zinc-800 space-y-1.5 shadow-sm animate-in fade-in slide-in-from-top-1 duration-200">
-              <div className="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+            <div className="animate-in fade-in slide-in-from-top-1 mt-3 w-full space-y-1.5 rounded-xl border border-zinc-800 bg-zinc-900 p-3 text-white shadow-sm duration-200">
+              <div className="flex items-center justify-between text-[11px] font-medium text-zinc-400">
                 <div className="flex items-center gap-1.5">
-                  <QrCode className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span className="text-zinc-300 font-semibold">
+                  <QrCode className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                  <span className="font-semibold text-zinc-300">
                     Okunan Ham DataMatrix Metni:
                   </span>
                 </div>
@@ -378,56 +378,56 @@ export const DataMatrixScannerModal = ({
                     setCopied(true);
                     setTimeout(() => setCopied(false), 2000);
                   }}
-                  className="flex items-center gap-1 text-[10px] text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded transition cursor-pointer"
+                  className="flex cursor-pointer items-center gap-1 rounded bg-zinc-800 px-2 py-0.5 text-[10px] text-zinc-300 transition hover:bg-zinc-700 hover:text-white"
                   title="Panoya Kopyala"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400 font-medium">
+                      <Check className="h-3 w-3 text-emerald-400" />
+                      <span className="font-medium text-emerald-400">
                         Kopyalandı
                       </span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3 h-3" />
+                      <Copy className="h-3 w-3" />
                       <span>Kopyala</span>
                     </>
                   )}
                 </button>
               </div>
-              <div className="p-2 bg-zinc-950 rounded-lg border border-zinc-800/80 font-mono text-xs text-emerald-400 break-all select-all tracking-wide font-bold">
+              <div className="rounded-lg border border-zinc-800/80 bg-zinc-950 p-2 font-mono text-xs font-bold tracking-wide break-all text-emerald-400 select-all">
                 {rawDetectedText}
               </div>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mt-3 w-full p-2.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-lg text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="mt-3 flex w-full items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 p-2.5 text-xs text-rose-800">
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
               <div className="flex-1">{errorMessage}</div>
             </div>
           )}
 
           {stockSuccessMsg && (
-            <div className="mt-3 w-full p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="mt-3 flex w-full items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-2.5 text-xs text-emerald-800">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
               <div className="font-medium">{stockSuccessMsg}</div>
             </div>
           )}
 
           {scanResult && (
-            <div className="w-full mt-2 bg-zinc-50 border border-zinc-200 rounded-xl p-3.5 space-y-3">
+            <div className="mt-2 w-full space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3.5">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-200 text-zinc-800">
+                <span className="rounded bg-zinc-200 px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-800">
                   {scanResult.type}
                 </span>
 
                 <button
                   onClick={handleResumeScan}
-                  className="px-2 py-1 bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-700 rounded-md text-xs font-medium flex items-center gap-1 transition"
+                  className="flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 py-1 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100"
                 >
-                  <RefreshCw className="w-3 h-3" />
+                  <RefreshCw className="h-3 w-3" />
                   <span>Tekrar Tara</span>
                 </button>
               </div>
@@ -442,26 +442,26 @@ export const DataMatrixScannerModal = ({
                           <img
                             src={prod.imageUrl}
                             alt={prod.name}
-                            className="w-14 h-14 rounded-lg object-cover border border-zinc-200"
+                            className="h-14 w-14 rounded-lg border border-zinc-200 object-cover"
                           />
                         ) : (
-                          <div className="w-14 h-14 rounded-lg bg-zinc-200 flex items-center justify-center text-zinc-400">
-                            <Package className="w-6 h-6" />
+                          <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-zinc-200 text-zinc-400">
+                            <Package className="h-6 w-6" />
                           </div>
                         )}
 
-                        <div className="flex-1 min-w-0">
+                        <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-1">
-                            <h4 className="font-semibold text-zinc-900 text-xs leading-snug line-clamp-2">
+                            <h4 className="line-clamp-2 text-xs leading-snug font-semibold text-zinc-900">
                               {prod.name}
                             </h4>
                             <div className="shrink-0">
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
+                              <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
                                 {prod.owner}
                               </span>
                             </div>
                           </div>
-                          <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
+                          <p className="mt-0.5 font-mono text-[11px] text-zinc-500">
                             {prod.sku}
                           </p>
                           <div className="mt-1 flex items-baseline gap-1.5">
@@ -472,7 +472,7 @@ export const DataMatrixScannerModal = ({
                         </div>
                       </div>
 
-                      <div className="bg-white p-2 rounded-lg border border-zinc-200 text-[11px] text-zinc-700">
+                      <div className="rounded-lg border border-zinc-200 bg-white p-2 text-[11px] text-zinc-700">
                         <span className="text-zinc-400">Konum: </span>
                         <strong>
                           {prod.compartment?.cabinet?.name} ➔{" "}
@@ -481,14 +481,14 @@ export const DataMatrixScannerModal = ({
                       </div>
 
                       {prod.isAssigned && prod.assignment && (
-                        <div className="p-2.5 bg-amber-50 border border-amber-300 rounded-lg text-xs space-y-1.5 shadow-2xs">
+                        <div className="space-y-1.5 rounded-lg border border-amber-300 bg-amber-50 p-2.5 text-xs shadow-2xs">
                           <div className="flex items-center gap-1.5 font-bold text-amber-900">
-                            <UserCheck className="w-4 h-4 text-amber-700 shrink-0" />
+                            <UserCheck className="h-4 w-4 shrink-0 text-amber-700" />
                             <span>ZİMMETLİ ÜRÜN</span>
                           </div>
-                          <div className="text-[11px] text-amber-950 space-y-0.5">
+                          <div className="space-y-0.5 text-[11px] text-amber-950">
                             <p>
-                              <span className="text-amber-800 font-medium">
+                              <span className="font-medium text-amber-800">
                                 Zimmetli Kişi:{" "}
                               </span>
                               <strong className="text-zinc-900">
@@ -496,28 +496,28 @@ export const DataMatrixScannerModal = ({
                               </strong>
                             </p>
                             <p>
-                              <span className="text-amber-800 font-medium">
+                              <span className="font-medium text-amber-800">
                                 Zimmet Adedi:{" "}
                               </span>
-                              <strong className="text-amber-900 font-mono">
+                              <strong className="font-mono text-amber-900">
                                 {prod.assignment.assignedQuantity || 1} adet
                               </strong>
                             </p>
                             {prod.assignment.assignedToPhone && (
                               <p>
-                                <span className="text-amber-800 font-medium">
+                                <span className="font-medium text-amber-800">
                                   Telefon:{" "}
                                 </span>
                                 <a
                                   href={`tel:${prod.assignment.assignedToPhone}`}
-                                  className="underline font-semibold text-amber-900"
+                                  className="font-semibold text-amber-900 underline"
                                 >
                                   {prod.assignment.assignedToPhone}
                                 </a>
                               </p>
                             )}
                             <p>
-                              <span className="text-amber-800 font-medium">
+                              <span className="font-medium text-amber-800">
                                 Başlangıç Tarihi:{" "}
                               </span>
                               <span>
@@ -527,14 +527,14 @@ export const DataMatrixScannerModal = ({
                             </p>
                             {prod.assignment.assignedEndDate && (
                               <p>
-                                <span className="text-amber-800 font-medium">
+                                <span className="font-medium text-amber-800">
                                   Bitiş Tarihi:{" "}
                                 </span>
                                 <span>{prod.assignment.assignedEndDate}</span>
                               </p>
                             )}
                             {prod.assignment.note && (
-                              <p className="text-[10px] text-zinc-600 bg-white/80 p-1 rounded border border-amber-200 mt-1">
+                              <p className="mt-1 rounded border border-amber-200 bg-white/80 p-1 text-[10px] text-zinc-600">
                                 {prod.assignment.note}
                               </p>
                             )}
@@ -553,16 +553,16 @@ export const DataMatrixScannerModal = ({
                                 Math.max(1, parseInt(e.target.value, 10) || 1),
                               )
                             }
-                            className="w-12 px-1.5 py-1 text-center text-xs font-mono font-bold border border-zinc-200 rounded-md bg-white"
+                            className="w-12 rounded-md border border-zinc-200 bg-white px-1.5 py-1 text-center font-mono text-xs font-bold"
                           />
                         </div>
 
                         <button
                           onClick={() => handleQuickStockChange(quickQtyChange)}
                           disabled={isUpdatingStock}
-                          className="flex-1 py-1.5 px-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-md text-xs font-medium flex items-center justify-center gap-1 transition disabled:opacity-50"
+                          className="flex flex-1 items-center justify-center gap-1 rounded-md bg-zinc-900 px-2 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-800 disabled:opacity-50"
                         >
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="h-3.5 w-3.5" />
                           <span>+{quickQtyChange} Ekle</span>
                         </button>
 
@@ -573,9 +573,9 @@ export const DataMatrixScannerModal = ({
                           disabled={
                             isUpdatingStock || prod.quantity < quickQtyChange
                           }
-                          className="flex-1 py-1.5 px-2 bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-800 rounded-md text-xs font-medium flex items-center justify-center gap-1 transition disabled:opacity-50"
+                          className="flex flex-1 items-center justify-center gap-1 rounded-md border border-zinc-200 bg-white px-2 py-1.5 text-xs font-medium text-zinc-800 transition hover:bg-zinc-100 disabled:opacity-50"
                         >
-                          <Minus className="w-3.5 h-3.5" />
+                          <Minus className="h-3.5 w-3.5" />
                           <span>-{quickQtyChange} Çık</span>
                         </button>
                       </div>
@@ -585,10 +585,10 @@ export const DataMatrixScannerModal = ({
                           handleCloseModal();
                           router.push(`/products/detail?id=${prod.id}`);
                         }}
-                        className="w-full py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition"
+                        className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-zinc-100 py-2 text-xs font-medium text-zinc-900 transition hover:bg-zinc-200"
                       >
                         <span>Ürün Sayfasına Git</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   );
@@ -600,16 +600,16 @@ export const DataMatrixScannerModal = ({
                   return (
                     <div className="space-y-2.5">
                       <div>
-                        <h4 className="font-semibold text-zinc-900 text-xs font-mono">
+                        <h4 className="font-mono text-xs font-semibold text-zinc-900">
                           Raf: {comp.code}
                         </h4>
-                        <p className="text-[11px] text-zinc-500 font-mono">
+                        <p className="font-mono text-[11px] text-zinc-500">
                           Dolap: {comp.cabinet?.code || comp.cabinetId}
                         </p>
                       </div>
 
-                      <div className="max-h-36 overflow-y-auto space-y-1">
-                        <span className="text-[10px] text-zinc-500 font-medium">
+                      <div className="max-h-36 space-y-1 overflow-y-auto">
+                        <span className="text-[10px] font-medium text-zinc-500">
                           İçindeki Ürünler ({comp.products?.length || 0}):
                         </span>
                         {comp.products?.map((p) => (
@@ -619,10 +619,10 @@ export const DataMatrixScannerModal = ({
                               handleCloseModal();
                               router.push(`/products/detail?id=${p.id}`);
                             }}
-                            className="p-1.5 bg-white rounded border border-zinc-200 flex items-center justify-between text-[11px] cursor-pointer hover:border-zinc-400"
+                            className="flex cursor-pointer items-center justify-between rounded border border-zinc-200 bg-white p-1.5 text-[11px] hover:border-zinc-400"
                           >
                             <span className="truncate">{p.name}</span>
-                            <span className="font-mono font-bold ml-2">
+                            <span className="ml-2 font-mono font-bold">
                               {p.quantity} adet
                             </span>
                           </div>
@@ -636,7 +636,7 @@ export const DataMatrixScannerModal = ({
                             `/products?new=true&compartmentCode=${comp.code}`,
                           );
                         }}
-                        className="w-full py-1.5 bg-zinc-900 text-white text-xs font-medium rounded-lg"
+                        className="w-full rounded-lg bg-zinc-900 py-1.5 text-xs font-medium text-white"
                       >
                         + Bu Rafa Ürün Ekle
                       </button>
@@ -650,7 +650,7 @@ export const DataMatrixScannerModal = ({
                   return (
                     <div className="space-y-2">
                       <div>
-                        <h4 className="font-semibold text-zinc-900 text-xs font-mono">
+                        <h4 className="font-mono text-xs font-semibold text-zinc-900">
                           Dolap: {cab.code}
                         </h4>
                       </div>
@@ -660,7 +660,7 @@ export const DataMatrixScannerModal = ({
                           handleCloseModal();
                           router.push(`/storage?cabinetId=${cab.id}`);
                         }}
-                        className="w-full py-1.5 bg-zinc-900 text-white text-xs font-medium rounded-lg"
+                        className="w-full rounded-lg bg-zinc-900 py-1.5 text-xs font-medium text-white"
                       >
                         Dolabı Aç
                       </button>
@@ -672,7 +672,7 @@ export const DataMatrixScannerModal = ({
 
           <form
             onSubmit={handleManualSubmit}
-            className="w-full mt-3 pt-2.5 border-t border-zinc-100 flex items-center gap-1.5"
+            className="mt-3 flex w-full items-center gap-1.5 border-t border-zinc-100 pt-2.5"
           >
             <div className="relative flex-1">
               <input
@@ -680,15 +680,15 @@ export const DataMatrixScannerModal = ({
                 value={manualCode}
                 onChange={(e) => setManualCode(e.target.value)}
                 placeholder="Veya kodu elle girin..."
-                className="w-full pl-7 pr-2 py-1.5 text-xs border border-zinc-200 rounded-lg bg-zinc-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 py-1.5 pr-2 pl-7 text-xs focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none"
               />
-              <Search className="w-3 h-3 text-zinc-400 absolute left-2.5 top-2.5" />
+              <Search className="absolute top-2.5 left-2.5 h-3 w-3 text-zinc-400" />
             </div>
 
             <button
               type="submit"
               disabled={!manualCode.trim() || isLoadingLookup}
-              className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg disabled:opacity-40"
+              className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:opacity-40"
             >
               Ara
             </button>

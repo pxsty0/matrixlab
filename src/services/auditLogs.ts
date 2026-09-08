@@ -1,10 +1,4 @@
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  addDoc,
-} from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db, isFirebaseConfigured } from "../lib/firebase";
 import {
   AuditLog,
@@ -59,10 +53,7 @@ export const AuditLogAPI = {
     const total = allLogs.length;
     const limitCount = params?.limit ?? 100;
     const offsetCount = params?.offset ?? 0;
-    const paginatedData = allLogs.slice(
-      offsetCount,
-      offsetCount + limitCount,
-    );
+    const paginatedData = allLogs.slice(offsetCount, offsetCount + limitCount);
 
     return {
       data: paginatedData,
@@ -85,7 +76,10 @@ export const AuditLogAPI = {
 
     const stockTypes = new Set(["IN", "OUT", "TRANSFER", "PRODUCT_CREATE"]);
     const recentMovements = logsRes.data
-      .filter((m) => stockTypes.has(m.type) || (m.change !== undefined && m.change !== 0))
+      .filter(
+        (m) =>
+          stockTypes.has(m.type) || (m.change !== undefined && m.change !== 0),
+      )
       .slice(0, 10);
 
     return {

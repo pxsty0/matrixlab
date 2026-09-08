@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+public/
+package-lock.json
+*.tsbuildinfo
+android/
+ios/
+.env*
+

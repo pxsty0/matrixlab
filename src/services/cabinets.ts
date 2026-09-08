@@ -122,7 +122,9 @@ export const CabinetAPI = {
     if (!snap.exists()) throw new Error("Güncellenecek dolap bulunamadı.");
 
     const current = snap.data();
-    const updates: Record<string, any> = { updatedAt: new Date().toISOString() };
+    const updates: Record<string, any> = {
+      updatedAt: new Date().toISOString(),
+    };
     if (payload.code !== undefined)
       updates.code = cleanStr(payload.code).toUpperCase();
     if (payload.name !== undefined) updates.name = cleanStr(payload.name);
@@ -142,7 +144,9 @@ export const CabinetAPI = {
     return toCabinet(updatedSnap.id, updatedSnap.data());
   },
 
-  delete: async (id: string): Promise<{ success: boolean; message: string }> => {
+  delete: async (
+    id: string,
+  ): Promise<{ success: boolean; message: string }> => {
     const compsSnap = await getDocs(
       query(collection(db, "compartments"), where("cabinetId", "==", id)),
     );

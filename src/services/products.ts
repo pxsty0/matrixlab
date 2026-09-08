@@ -17,7 +17,13 @@ import {
   AuditLog,
   ProductOwner,
 } from "../types";
-import { cleanStr, cleanNum, toIsoDate, getActor, addAuditEntry } from "./helpers";
+import {
+  cleanStr,
+  cleanNum,
+  toIsoDate,
+  getActor,
+  addAuditEntry,
+} from "./helpers";
 import { toCabinet } from "./cabinets";
 import { toCompartment } from "./compartments";
 import { toast } from "react-toastify";
@@ -74,9 +80,7 @@ export const ProductAPI = {
     compartmentId?: string;
   }): Promise<Product[]> => {
     const [prodsSnap, compsSnap, cabsSnap] = await Promise.all([
-      getDocs(
-        query(collection(db, "products"), orderBy("updatedAt", "desc")),
-      ),
+      getDocs(query(collection(db, "products"), orderBy("updatedAt", "desc"))),
       getDocs(collection(db, "compartments")),
       getDocs(collection(db, "cabinets")),
     ]);
@@ -161,10 +165,7 @@ export const ProductAPI = {
     let movements: AuditLog[] = [];
     try {
       const movsSnap = await getDocs(
-        query(
-          collection(db, "auditLogs"),
-          where("productId", "==", id),
-        ),
+        query(collection(db, "auditLogs"), where("productId", "==", id)),
       );
       movements = movsSnap.docs
         .map((d) => {
@@ -185,7 +186,10 @@ export const ProductAPI = {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
     } catch (e) {
-      toast.warning("Ürünün log geçmişi yüklenemedi: " + (e instanceof Error ? e.message : ""));
+      toast.warning(
+        "Ürünün log geçmişi yüklenemedi: " +
+          (e instanceof Error ? e.message : ""),
+      );
     }
 
     return toProduct(snap.id, prodData, compartment, movements);
@@ -205,7 +209,8 @@ export const ProductAPI = {
 
     if (!name) throw new Error("Ürün adı zorunludur.");
     if (!sku) throw new Error("Ürün SKU / Barkod kodu zorunludur.");
-    if (!compartmentCode) throw new Error("Ürünün yerleşeceği raf seçilmelidir.");
+    if (!compartmentCode)
+      throw new Error("Ürünün yerleşeceği raf seçilmelidir.");
 
     const now = new Date().toISOString();
     const prodRef = doc(collection(db, "products"));
@@ -246,7 +251,9 @@ export const ProductAPI = {
     if (!snap.exists()) throw new Error("Güncellenecek ürün bulunamadı.");
 
     const existing = snap.data();
-    const updates: Record<string, any> = { updatedAt: new Date().toISOString() };
+    const updates: Record<string, any> = {
+      updatedAt: new Date().toISOString(),
+    };
 
     if (formData.has("name")) updates.name = cleanStr(formData.get("name"));
     if (formData.has("sku"))
@@ -274,12 +281,22 @@ export const ProductAPI = {
       changes.push(`Ad: "${existing.name}" ➔ "${updates.name}"`);
     if (updates.sku && updates.sku !== existing.sku)
       changes.push(`SKU: "${existing.sku}" ➔ "${updates.sku}"`);
-    if (updates.compartmentCode && updates.compartmentCode !== existing.compartmentCode)
-      changes.push(`Raf: "${existing.compartmentCode}" ➔ "${updates.compartmentCode}"`);
-    if (updates.quantity !== undefined && updates.quantity !== existing.quantity)
+    if (
+      updates.compartmentCode &&
+      updates.compartmentCode !== existing.compartmentCode
+    )
+      changes.push(
+        `Raf: "${existing.compartmentCode}" ➔ "${updates.compartmentCode}"`,
+      );
+    if (
+      updates.quantity !== undefined &&
+      updates.quantity !== existing.quantity
+    )
       changes.push(`Stok: ${existing.quantity} ➔ ${updates.quantity}`);
     if (updates.owner !== undefined && updates.owner !== existing.owner)
-      changes.push(`Sahip: "${existing.owner || "-"}" ➔ "${updates.owner || "-"}"`);
+      changes.push(
+        `Sahip: "${existing.owner || "-"}" ➔ "${updates.owner || "-"}"`,
+      );
 
     const stockDiff =
       updates.quantity !== undefined
@@ -289,19 +306,15 @@ export const ProductAPI = {
 
     const batch = writeBatch(db);
     batch.update(prodRef, updates);
-    addAuditEntry(
-      batch,
-      "PRODUCT_UPDATE",
-      detailMsg,
-      stockDiff,
-      id,
-    );
+    addAuditEntry(batch, "PRODUCT_UPDATE", detailMsg, stockDiff, id);
     await batch.commit();
 
     return ProductAPI.getById(id);
   },
 
-  delete: async (id: string): Promise<{ success: boolean; message: string }> => {
+  delete: async (
+    id: string,
+  ): Promise<{ success: boolean; message: string }> => {
     const prodRef = doc(db, "products", id);
     const snap = await getDoc(prodRef);
     if (!snap.exists()) throw new Error("Ürün bulunamadı.");
@@ -352,7 +365,9 @@ export const ProductAPI = {
 
       const noteText = payload.note ? ` (Not: ${payload.note})` : "";
       const directionText =
-        change > 0 ? `+${change} adet eklendi` : `${Math.abs(change)} adet düşüldü`;
+        change > 0
+          ? `+${change} adet eklendi`
+          : `${Math.abs(change)} adet düşüldü`;
       const detailMsg = `Stok Güncellendi: "${prod.name}" (${prod.sku}) için ${directionText}. [Önceki: ${currentQty}, Yeni: ${newQty}, Raf: ${prod.compartmentCode || "-"}]${noteText}`;
 
       const logRef = doc(collection(db, "auditLogs"));
@@ -379,7 +394,11 @@ export const ProductAPI = {
     });
 
     const fullProduct = await ProductAPI.getById(id);
-    return { product: fullProduct, auditLog: createdLog!, movement: createdLog! };
+    return {
+      product: fullProduct,
+      auditLog: createdLog!,
+      movement: createdLog!,
+    };
   },
 
   transfer: async (
@@ -440,7 +459,11 @@ export const ProductAPI = {
     });
 
     const fullProduct = await ProductAPI.getById(id);
-    return { product: fullProduct, auditLog: createdLog!, movement: createdLog! };
+    return {
+      product: fullProduct,
+      auditLog: createdLog!,
+      movement: createdLog!,
+    };
   },
 
   assign: async (
@@ -549,8 +572,7 @@ export const ProductAPI = {
       const currentStock = cleanNum(prod.quantity, 0, 0);
       const newStock = currentStock + returnQty;
       const now = new Date().toISOString();
-      const prevAssignee =
-        prod.assignment?.assignedToName || "Bilinmeyen Kişi";
+      const prevAssignee = prod.assignment?.assignedToName || "Bilinmeyen Kişi";
       const prevStartDate = prod.assignment?.assignedStartDate || "-";
       const prevEndDate = prod.assignment?.assignedEndDate || "-";
 

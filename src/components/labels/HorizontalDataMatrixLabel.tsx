@@ -60,57 +60,57 @@ export const HorizontalDataMatrixLabel = ({
   return (
     <div
       onClick={onToggleSelect}
-      className={`label-card relative bg-white rounded-lg border transition-all text-left select-none overflow-hidden box-border flex flex-col justify-between ${
+      className={`label-card relative box-border flex flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
         isSelected
-          ? "border-zinc-900 shadow-xs ring-1 ring-zinc-900 opacity-100"
-          : "border-dashed border-zinc-300 opacity-40 hover:opacity-75 hover:border-zinc-400 print:hidden"
+          ? "border-zinc-900 opacity-100 shadow-xs ring-1 ring-zinc-900"
+          : "border-dashed border-zinc-300 opacity-40 hover:border-zinc-400 hover:opacity-75 print:hidden"
       } ${onToggleSelect ? "cursor-pointer" : ""} ${className}`}
     >
-      <div className="p-2.5 flex items-center justify-between gap-2.5 min-w-0 w-full">
-        <div className="flex-1 min-w-0 flex flex-col justify-center gap-1">
-          <h4 className="font-bold text-zinc-900 text-xs sm:text-[13px] leading-tight line-clamp-2 break-words">
+      <div className="flex w-full min-w-0 items-center justify-between gap-2.5 p-2.5">
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+          <h4 className="line-clamp-2 text-xs leading-tight font-bold break-words text-zinc-900 sm:text-[13px]">
             {title}
           </h4>
 
           {type === "PRODUCT" && (
             <>
               {sku && (
-                <div className="text-[10px] sm:text-[11px] text-zinc-700 flex items-center gap-1 font-mono">
-                  <span className="text-zinc-500 font-sans font-medium">
+                <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
+                  <span className="font-sans font-medium text-zinc-500">
                     SKU:
                   </span>
-                  <span className="font-semibold text-zinc-900 bg-zinc-50 px-1 py-0.2 rounded border border-zinc-200/60">
+                  <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-semibold text-zinc-900">
                     {sku}
                   </span>
                 </div>
               )}
 
               {owner && (
-                <div className="text-[10px] sm:text-[11px] text-zinc-700 flex items-center gap-1">
-                  <span className="text-zinc-500 font-medium">Sahip:</span>
-                  <span className="font-semibold text-zinc-900 bg-zinc-50 px-1 py-0.2 rounded border border-zinc-200/60">
+                <div className="flex items-center gap-1 text-[10px] text-zinc-700 sm:text-[11px]">
+                  <span className="font-medium text-zinc-500">Sahip:</span>
+                  <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-semibold text-zinc-900">
                     {owner}
                   </span>
                 </div>
               )}
 
               {cabinetCode && (
-                <div className="text-[10px] sm:text-[11px] text-zinc-700 flex items-center gap-1 font-mono">
-                  <span className="text-zinc-500 font-sans font-medium">
+                <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
+                  <span className="font-sans font-medium text-zinc-500">
                     Dolap:
                   </span>
-                  <span className="font-bold text-zinc-900 bg-zinc-50 px-1 py-0.2 rounded border border-zinc-200/60">
+                  <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-bold text-zinc-900">
                     {cabinetCode}
                   </span>
                 </div>
               )}
 
               {compartmentCode && (
-                <div className="text-[10px] sm:text-[11px] text-zinc-700 flex items-center gap-1 font-mono">
-                  <span className="text-zinc-500 font-sans font-medium">
+                <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
+                  <span className="font-sans font-medium text-zinc-500">
                     Raf:
                   </span>
-                  <span className="font-bold text-zinc-900 bg-zinc-50 px-1 py-0.2 rounded border border-zinc-200/60">
+                  <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-bold text-zinc-900">
                     {compartmentCode}
                   </span>
                 </div>
@@ -119,39 +119,39 @@ export const HorizontalDataMatrixLabel = ({
           )}
 
           {type === "COMPARTMENT" && cabinetCode && (
-            <div className="text-[10px] sm:text-[11px] text-zinc-700 flex items-center gap-1 font-mono">
-              <span className="text-zinc-500 font-sans font-medium">
+            <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
+              <span className="font-sans font-medium text-zinc-500">
                 Dolap:
               </span>
-              <span className="font-bold text-zinc-900 bg-zinc-50 px-1 py-0.2 rounded border border-zinc-200/60">
+              <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-bold text-zinc-900">
                 {cabinetCode}
               </span>
             </div>
           )}
         </div>
 
-        <div className="shrink-0 flex flex-col items-center justify-center pl-2.5 border-l border-dashed border-zinc-200 w-24">
-          <span className="font-bold text-[8.5px] uppercase tracking-wider text-white bg-zinc-900 px-1.5 py-0.5 rounded mb-1 text-center shadow-2xs">
+        <div className="flex w-24 shrink-0 flex-col items-center justify-center border-l border-dashed border-zinc-200 pl-2.5">
+          <span className="mb-1 rounded bg-zinc-900 px-1.5 py-0.5 text-center text-[8.5px] font-bold tracking-wider text-white uppercase shadow-2xs">
             {typeLabelText}
           </span>
-          <div className="p-0.5 bg-white rounded flex items-center justify-center pointer-events-none">
+          <div className="pointer-events-none flex items-center justify-center rounded bg-white p-0.5">
             <canvas ref={canvasRef} />
           </div>
-          <span className="font-mono text-[8px] font-bold text-zinc-900 text-center tracking-tight break-all max-w-[85px] mt-0.5 select-all">
+          <span className="mt-0.5 max-w-[85px] text-center font-mono text-[8px] font-bold tracking-tight break-all text-zinc-900 select-all">
             {code}
           </span>
         </div>
       </div>
 
       {showActions && (
-        <div className="no-print flex items-center justify-end gap-1 px-2.5 py-1.5 bg-zinc-50 border-t border-zinc-100 text-[11px]">
+        <div className="no-print flex items-center justify-end gap-1 border-t border-zinc-100 bg-zinc-50 px-2.5 py-1.5 text-[11px]">
           <button
             type="button"
             onClick={handlePrint}
             title="Yazdır"
-            className="px-2 py-0.5 rounded text-white bg-zinc-900 hover:bg-zinc-800 transition flex items-center gap-1 font-medium cursor-pointer"
+            className="flex cursor-pointer items-center gap-1 rounded bg-zinc-900 px-2 py-0.5 font-medium text-white transition hover:bg-zinc-800"
           >
-            <Printer className="w-3 h-3" />
+            <Printer className="h-3 w-3" />
             <span className="text-[10px]">Yazdır</span>
           </button>
         </div>

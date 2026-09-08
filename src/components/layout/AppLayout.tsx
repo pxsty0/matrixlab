@@ -109,30 +109,30 @@ export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-zinc-50 text-zinc-900 flex flex-col md:flex-row antialiased selection:bg-zinc-200">
-      <aside className="no-print hidden md:flex flex-col w-60 h-screen bg-white border-r border-zinc-200 shrink-0 select-none z-30">
-        <div className="h-14 px-4 flex items-center gap-2.5 border-b border-zinc-200 shrink-0">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-zinc-50 text-zinc-900 antialiased selection:bg-zinc-200 md:flex-row">
+      <aside className="no-print z-30 hidden h-screen w-60 shrink-0 flex-col border-r border-zinc-200 bg-white select-none md:flex">
+        <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-zinc-200 px-4">
           <img
             src="/favicon.svg"
             alt="MatrixLab"
-            className="w-7 h-7 rounded-lg object-contain shrink-0"
+            className="h-7 w-7 shrink-0 rounded-lg object-contain"
           />
-          <span className="font-semibold text-sm tracking-tight text-zinc-900">
+          <span className="text-sm font-semibold tracking-tight text-zinc-900">
             MatrixLab
           </span>
         </div>
 
-        <div className="p-3 shrink-0">
+        <div className="shrink-0 p-3">
           <button
             onClick={() => setIsScannerOpen(true)}
-            className="w-full py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium rounded-lg flex items-center justify-center gap-2 transition active:scale-[0.98] shadow-xs cursor-pointer"
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white shadow-xs transition hover:bg-zinc-800 active:scale-[0.98]"
           >
-            <Camera className="w-3.5 h-3.5" />
+            <Camera className="h-3.5 w-3.5" />
             <span>Kamera ile Tara</span>
           </button>
         </div>
 
-        <nav className="flex-1 px-2 py-1 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-1">
           {desktopNavItems.map((item) => {
             const Icon = item.icon;
             const active = isItemActive(item.to);
@@ -140,33 +140,33 @@ export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
               <Link
                 key={item.to}
                 href={item.to}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition ${
+                className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
                   active
-                    ? "bg-zinc-100 text-zinc-900 font-semibold"
+                    ? "bg-zinc-100 font-semibold text-zinc-900"
                     : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
                 }`}
               >
-                <Icon className="w-4 h-4 text-zinc-500" />
+                <Icon className="h-4 w-4 text-zinc-500" />
                 <span>{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-2.5 border-t border-zinc-200 space-y-2 shrink-0 bg-white">
+        <div className="shrink-0 space-y-2 border-t border-zinc-200 bg-white p-2.5">
           {user && (
-            <div className="p-2 bg-zinc-50 rounded-lg border border-zinc-200/80 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 text-xs font-medium">
-                  <UserIcon className="w-3.5 h-3.5" />
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-zinc-200/80 bg-zinc-50 p-2">
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-medium text-zinc-700">
+                  <UserIcon className="h-3.5 w-3.5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-zinc-900 truncate leading-tight">
+                  <p className="truncate text-xs leading-tight font-semibold text-zinc-900">
                     {user.name}
                   </p>
                   {user.email && (
                     <p
-                      className="text-[10px] text-zinc-500 truncate leading-tight mt-0.5"
+                      className="mt-0.5 truncate text-[10px] leading-tight text-zinc-500"
                       title={user.email}
                     >
                       {user.email}
@@ -178,87 +178,87 @@ export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
               <button
                 onClick={handleLogout}
                 title="Çıkış Yap"
-                className="p-1 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded transition shrink-0 cursor-pointer"
+                className="shrink-0 cursor-pointer rounded p-1 text-zinc-400 transition hover:bg-rose-50 hover:text-rose-600"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="h-3.5 w-3.5" />
               </button>
             </div>
           )}
 
           <div className="pt-1">
-            <span className="text-[9px] text-zinc-400 font-medium px-1 uppercase tracking-wider block mb-1">
+            <span className="mb-1 block px-1 text-[9px] font-medium tracking-wider text-zinc-400 uppercase">
               Geliştirici
             </span>
             <a
               href="https://github.com/pxsty0/matrixlab"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-zinc-50 hover:bg-zinc-100/80 border border-zinc-200/80 transition group text-xs"
+              className="group flex items-center justify-between rounded-lg border border-zinc-200/80 bg-zinc-50 px-2.5 py-2 text-xs transition hover:bg-zinc-100/80"
             >
-              <p className="font-semibold text-zinc-900 group-hover:text-zinc-600 leading-tight truncate">
+              <p className="truncate leading-tight font-semibold text-zinc-900 group-hover:text-zinc-600">
                 Mustafa KÖK
               </p>
-              <ExternalLink className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-600 shrink-0 ml-1 transition" />
+              <ExternalLink className="ml-1 h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-zinc-600" />
             </a>
-            <p className="text-[10px] font-mono text-zinc-400 text-center mt-2">
+            <p className="mt-2 text-center font-mono text-[10px] text-zinc-400">
               v{packageJson.version}
             </p>
           </div>
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col h-screen overflow-y-auto pb-16 md:pb-0">
+      <div className="flex h-screen flex-1 flex-col overflow-y-auto pb-16 md:pb-0">
         <header
-          className={`no-print bg-white border-b border-zinc-200 px-4 flex items-center justify-between gap-4 sticky top-0 z-20 shrink-0 transition-all ${
-            isIOS ? "pt-7 h-[calc(3.5rem+1.75rem)] md:pt-0 md:h-14" : "h-14"
+          className={`no-print sticky top-0 z-20 flex shrink-0 items-center justify-between gap-4 border-b border-zinc-200 bg-white px-4 transition-all ${
+            isIOS ? "h-[calc(3.5rem+1.75rem)] pt-7 md:h-14 md:pt-0" : "h-14"
           }`}
         >
-          <div className="md:hidden flex items-center gap-2">
+          <div className="flex items-center gap-2 md:hidden">
             <img
               src="/favicon.svg"
               alt="MatrixLab"
-              className="w-7 h-7 rounded-lg object-contain shrink-0"
+              className="h-7 w-7 shrink-0 rounded-lg object-contain"
             />
-            <span className="font-bold text-sm tracking-tight text-zinc-900">
+            <span className="text-sm font-bold tracking-tight text-zinc-900">
               MatrixLab
             </span>
           </div>
 
-          <div className="flex-1 flex items-center justify-end gap-3">
+          <div className="flex flex-1 items-center justify-end gap-3">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsScannerOpen(true)}
-                className="md:hidden p-1.5 rounded-lg border border-zinc-200 text-zinc-700 hover:bg-zinc-100 text-xs font-medium flex items-center gap-1.5"
+                className="flex items-center gap-1.5 rounded-lg border border-zinc-200 p-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 md:hidden"
               >
-                <Camera className="w-4 h-4" />
+                <Camera className="h-4 w-4" />
                 <span>Tara</span>
               </button>
 
               <button
                 onClick={() => router.push("/products?new=true")}
-                className="py-1.5 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition active:scale-[0.98]"
+                className="flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-800 active:scale-[0.98]"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="h-3.5 w-3.5" />
                 <span>Ürün Ekle</span>
               </button>
 
               <button
                 onClick={handleLogout}
                 title="Çıkış Yap"
-                className="md:hidden p-1.5 rounded-lg border border-zinc-200 text-zinc-600 hover:text-rose-600 hover:bg-rose-50 transition"
+                className="rounded-lg border border-zinc-200 p-1.5 text-zinc-600 transition hover:bg-rose-50 hover:text-rose-600 md:hidden"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="h-4 w-4" />
               </button>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-6 max-w-6xl w-full mx-auto">
+        <main className="mx-auto w-full max-w-6xl flex-1 p-4 md:p-6">
           {children}
         </main>
       </div>
 
-      <div className="no-print md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))] flex items-center justify-around shadow-sm">
+      <div className="no-print fixed right-0 bottom-0 left-0 z-40 flex items-center justify-around border-t border-zinc-200 bg-white/95 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))] shadow-sm backdrop-blur-md md:hidden">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const active = isItemActive(item.to);
@@ -266,13 +266,13 @@ export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
             <Link
               key={item.to}
               href={item.to}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2 text-[10px] transition ${
+              className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 active
-                  ? "text-zinc-900 font-bold"
+                  ? "font-bold text-zinc-900"
                   : "text-zinc-500 hover:text-zinc-800"
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="h-4 w-4" />
               <span>{item.label}</span>
             </Link>
           );

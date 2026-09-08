@@ -20,7 +20,6 @@ export const toIsoDate = (val: unknown): string => {
   return String(val);
 };
 
-
 export const cleanStr = (v: unknown, fallback = ""): string =>
   typeof v === "string" ? v.trim() : fallback;
 

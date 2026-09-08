@@ -107,7 +107,9 @@ export const UserAPI = {
     if (!snap.exists()) throw new Error("Kullanıcı bulunamadı.");
 
     const current = snap.data();
-    const updates: Record<string, any> = { updatedAt: new Date().toISOString() };
+    const updates: Record<string, any> = {
+      updatedAt: new Date().toISOString(),
+    };
     if (input.name !== undefined) updates.name = cleanStr(input.name);
     if (input.email !== undefined)
       updates.email = cleanStr(input.email).toLowerCase();

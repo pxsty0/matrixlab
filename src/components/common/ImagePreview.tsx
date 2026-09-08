@@ -22,19 +22,19 @@ export const ImagePreview = ({
         {label}
       </label>
 
-      <div className="flex gap-3 items-start">
-        <div className="w-20 h-20 shrink-0 rounded-lg border border-zinc-200 bg-zinc-50 overflow-hidden flex flex-col items-center justify-center shadow-2xs">
+      <div className="flex items-start gap-3">
+        <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 shadow-2xs">
           {value && !hasError ? (
             <img
               src={value}
               alt="Önizleme"
               onError={() => setHasError(true)}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
           ) : (
-            <div className="text-center p-1 text-zinc-400">
-              <ImageIcon className="w-5 h-5 mx-auto mb-0.5" />
-              <span className="text-[9px] font-medium block text-zinc-400">
+            <div className="p-1 text-center text-zinc-400">
+              <ImageIcon className="mx-auto mb-0.5 h-5 w-5" />
+              <span className="block text-[9px] font-medium text-zinc-400">
                 {value && hasError ? "Yüklenemedi" : "Görsel Yok"}
               </span>
             </div>
@@ -43,7 +43,7 @@ export const ImagePreview = ({
 
         <div className="flex-1 space-y-1">
           <div className="relative">
-            <LinkIcon className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-2.5" />
+            <LinkIcon className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-zinc-400" />
             <input
               type="url"
               value={value || ""}
@@ -52,7 +52,7 @@ export const ImagePreview = ({
                 onChange?.(e.target.value);
               }}
               placeholder={placeholder}
-              className="w-full pl-8 pr-3 py-2 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-900 font-mono text-zinc-800 bg-white"
+              className="w-full rounded-lg border border-zinc-200 bg-white py-2 pr-3 pl-8 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             />
           </div>
           <p className="text-[10px] text-zinc-500">

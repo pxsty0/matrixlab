@@ -84,7 +84,9 @@ export const CompartmentAPI = {
       ),
     ]);
 
-    const cab = cabSnap.exists() ? toCabinet(cabSnap.id, cabSnap.data()) : undefined;
+    const cab = cabSnap.exists()
+      ? toCabinet(cabSnap.id, cabSnap.data())
+      : undefined;
     const prods = prodsSnap.docs.map((d) => {
       const p = d.data();
       return {
@@ -118,14 +120,18 @@ export const CompartmentAPI = {
     const docRef = doc(db, "compartments", code);
     const existingDocSnap = await getDoc(docRef);
     if (existingDocSnap.exists()) {
-      throw new Error(`'${code}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`);
+      throw new Error(
+        `'${code}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`,
+      );
     }
 
     const existingQuerySnap = await getDocs(
       query(collection(db, "compartments"), where("code", "==", code)),
     );
     if (!existingQuerySnap.empty) {
-      throw new Error(`'${code}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`);
+      throw new Error(
+        `'${code}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`,
+      );
     }
 
     const cabSnap = await getDoc(doc(db, "cabinets", payload.cabinetId));
@@ -167,7 +173,9 @@ export const CompartmentAPI = {
     if (!snap.exists()) throw new Error("Güncellenecek bölme bulunamadı.");
 
     const current = snap.data();
-    const updates: Record<string, any> = { updatedAt: new Date().toISOString() };
+    const updates: Record<string, any> = {
+      updatedAt: new Date().toISOString(),
+    };
     if (payload.cabinetId) updates.cabinetId = cleanStr(payload.cabinetId);
     if (payload.name !== undefined) updates.name = cleanStr(payload.name);
     if (payload.dataMatrix !== undefined)
@@ -178,13 +186,17 @@ export const CompartmentAPI = {
       if (newCode !== cleanStr(current.code).toUpperCase()) {
         const checkDoc = await getDoc(doc(db, "compartments", newCode));
         if (checkDoc.exists() && checkDoc.id !== id) {
-          throw new Error(`'${newCode}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`);
+          throw new Error(
+            `'${newCode}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`,
+          );
         }
         const checkQuery = await getDocs(
           query(collection(db, "compartments"), where("code", "==", newCode)),
         );
         if (checkQuery.docs.some((d) => d.id !== id)) {
-          throw new Error(`'${newCode}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`);
+          throw new Error(
+            `'${newCode}' ID'li bir raf zaten mevcut! Her raf ID'si benzersiz olmalıdır.`,
+          );
         }
         updates.code = newCode;
       }
@@ -202,7 +214,9 @@ export const CompartmentAPI = {
     return CompartmentAPI.getById(id);
   },
 
-  delete: async (id: string): Promise<{ success: boolean; message: string }> => {
+  delete: async (
+    id: string,
+  ): Promise<{ success: boolean; message: string }> => {
     const compRef = doc(db, "compartments", id);
     const snap = await getDoc(compRef);
     if (!snap.exists()) throw new Error("Bölme bulunamadı.");
