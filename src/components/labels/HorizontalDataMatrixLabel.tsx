@@ -2,11 +2,10 @@ import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { renderDataMatrixToCanvas } from "../../utils/datamatrix";
 import { Printer } from "lucide-react";
-
-export type LabelType = "PRODUCT" | "CABINET" | "COMPARTMENT";
+import { EntityType } from "../../types";
 
 export interface HorizontalLabelProps {
-  type: LabelType;
+  type: EntityType;
   title: string;
   owner?: string | null;
   cabinetCode?: string | null;
@@ -38,7 +37,7 @@ export const HorizontalDataMatrixLabel = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const typeLabelText =
-    type === "PRODUCT" ? "Ürün" : type === "CABINET" ? "Dolap" : "Raf";
+    type === "product" ? "Ürün" : type === "cabinet" ? "Dolap" : "Raf";
 
   useEffect(() => {
     if (canvasRef.current && code) {
@@ -49,9 +48,9 @@ export const HorizontalDataMatrixLabel = ({
   const handlePrint = (e: React.MouseEvent) => {
     e.stopPropagation();
     const tab =
-      type === "CABINET"
+      type === "cabinet"
         ? "cabinets"
-        : type === "COMPARTMENT"
+        : type === "compartment"
           ? "compartments"
           : "products";
     router.push({ pathname: "/labels", query: { tab } });
@@ -72,7 +71,7 @@ export const HorizontalDataMatrixLabel = ({
             {title}
           </h4>
 
-          {type === "PRODUCT" && (
+          {type === "product" && (
             <>
               {sku && (
                 <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
@@ -118,7 +117,7 @@ export const HorizontalDataMatrixLabel = ({
             </>
           )}
 
-          {type === "COMPARTMENT" && cabinetCode && (
+          {type === "compartment" && cabinetCode && (
             <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
               <span className="font-sans font-medium text-zinc-500">
                 Dolap:

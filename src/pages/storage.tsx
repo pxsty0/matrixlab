@@ -11,12 +11,9 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { CabinetAPI, CompartmentAPI } from "../services";
-import { Cabinet, Compartment } from "../types";
+import { Cabinet, Compartment, EntityType } from "../types";
 import { Modal } from "../components/common/Modal";
-import {
-  HorizontalDataMatrixLabel,
-  LabelType,
-} from "../components/labels/HorizontalDataMatrixLabel";
+import { HorizontalDataMatrixLabel } from "../components/labels/HorizontalDataMatrixLabel";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
@@ -53,7 +50,7 @@ export default function StoragePage() {
   const [isDeletingCompartment, setIsDeletingCompartment] = useState(false);
 
   const [selectedLabel, setSelectedLabel] = useState<{
-    type: LabelType;
+    type: EntityType;
     code: string;
     title: string;
     cabinetCode?: string | null;
@@ -443,7 +440,7 @@ export default function StoragePage() {
                     <button
                       onClick={() =>
                         setSelectedLabel({
-                          type: "CABINET",
+                          type: "cabinet",
                           code: activeCabinet.dataMatrix,
                           title: activeCabinet.name
                             ? `${activeCabinet.name} (${activeCabinet.code})`
@@ -511,7 +508,7 @@ export default function StoragePage() {
                               <button
                                 onClick={() =>
                                   setSelectedLabel({
-                                    type: "COMPARTMENT",
+                                    type: "compartment",
                                     code: comp.dataMatrix,
                                     title: comp.name
                                       ? `${comp.name} (${comp.code})`

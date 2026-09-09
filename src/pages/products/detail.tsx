@@ -647,7 +647,7 @@ export default function ProductDetailPage() {
               DataMatrix Ürün Etiketi
             </h4>
             <HorizontalDataMatrixLabel
-              type="PRODUCT"
+              type="product"
               title={product.name}
               owner={product.owner}
               cabinetCode={product.compartment?.cabinet?.code || null}

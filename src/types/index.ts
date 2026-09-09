@@ -1,6 +1,7 @@
 import { PRODUCT_OWNERS, ProductOwner } from "../config/constants";
 
 export type UserRole = "admin" | "staff" | "user";
+export type EntityType = "product" | "compartment" | "cabinet";
 
 export interface User {
   id: string;
@@ -100,10 +101,8 @@ export interface DashboardStats {
   recentMovements?: AuditLog[];
 }
 
-export type ScanEntityType = "PRODUCT" | "COMPARTMENT" | "CABINET";
-
 export interface ScanLookupResult {
   success: boolean;
-  type: ScanEntityType;
+  type: EntityType;
   data: Product | Compartment | Cabinet;
 }

@@ -23,7 +23,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { ScannerAPI, ProductAPI } from "../../services";
-import { ScanEntityType, Product, Compartment, Cabinet } from "../../types";
+import { EntityType, Product, Compartment, Cabinet } from "../../types";
 import { useRouter } from "next/router";
 
 interface DataMatrixScannerModalProps {
@@ -51,7 +51,7 @@ export const DataMatrixScannerModal = ({
   const [copied, setCopied] = useState(false);
 
   const [scanResult, setScanResult] = useState<{
-    type: ScanEntityType;
+    type: EntityType;
     data: Product | Compartment | Cabinet;
   } | null>(null);
 
@@ -259,10 +259,10 @@ export const DataMatrixScannerModal = ({
         data: result.data,
       });
 
-      if (onSelectProduct && result.type === "PRODUCT") {
+      if (onSelectProduct && result.type === "product") {
         onSelectProduct(result.data as Product);
       }
-      if (onSelectCompartment && result.type === "COMPARTMENT") {
+      if (onSelectCompartment && result.type === "compartment") {
         onSelectCompartment(result.data as Compartment);
       }
     } catch (err: any) {
@@ -291,7 +291,7 @@ export const DataMatrixScannerModal = ({
   };
 
   const handleQuickStockChange = async (change: number) => {
-    if (!scanResult || scanResult.type !== "PRODUCT") return;
+    if (!scanResult || scanResult.type !== "product") return;
     const prod = scanResult.data as Product;
 
     setIsUpdatingStock(true);
@@ -304,7 +304,7 @@ export const DataMatrixScannerModal = ({
       });
 
       setScanResult({
-        type: "PRODUCT",
+        type: "product",
         data: res.product,
       });
       setStockSuccessMsg(`Stok güncellendi: ${res.product.quantity} adet`);
@@ -432,7 +432,7 @@ export const DataMatrixScannerModal = ({
                 </button>
               </div>
 
-              {scanResult.type === "PRODUCT" &&
+              {scanResult.type === "product" &&
                 (() => {
                   const prod = scanResult.data as Product;
                   return (
@@ -594,7 +594,7 @@ export const DataMatrixScannerModal = ({
                   );
                 })()}
 
-              {scanResult.type === "COMPARTMENT" &&
+              {scanResult.type === "compartment" &&
                 (() => {
                   const comp = scanResult.data as Compartment;
                   return (
@@ -644,7 +644,7 @@ export const DataMatrixScannerModal = ({
                   );
                 })()}
 
-              {scanResult.type === "CABINET" &&
+              {scanResult.type === "cabinet" &&
                 (() => {
                   const cab = scanResult.data as Cabinet;
                   return (

@@ -82,18 +82,18 @@ export const ScannerAPI = {
 
     if (matchedProdDoc) {
       const product = await ProductAPI.getById(matchedProdDoc.id);
-      return { success: true, type: "PRODUCT", data: product };
+      return { success: true, type: "product", data: product };
     }
 
     if (matchedCompDoc) {
       const comp = await CompartmentAPI.getById(matchedCompDoc.id);
-      return { success: true, type: "COMPARTMENT", data: comp };
+      return { success: true, type: "compartment", data: comp };
     }
 
     if (matchedCabDoc) {
       const comps = await CompartmentAPI.getAll(matchedCabDoc.id);
       const cab = toCabinet(matchedCabDoc.id, matchedCabDoc.data(), comps);
-      return { success: true, type: "CABINET", data: cab };
+      return { success: true, type: "cabinet", data: cab };
     }
 
     throw new Error(`'${code}' koduna ait ürün, bölme veya dolap bulunamadı.`);

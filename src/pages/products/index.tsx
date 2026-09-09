@@ -754,7 +754,7 @@ export default function ProductsPage() {
       >
         {labelModalProduct && (
           <HorizontalDataMatrixLabel
-            type="PRODUCT"
+            type="product"
             title={labelModalProduct.name}
             owner={labelModalProduct.owner}
             cabinetCode={labelModalProduct.compartment?.cabinet?.code || null}

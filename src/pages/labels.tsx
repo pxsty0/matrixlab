@@ -9,7 +9,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { ProductAPI, CabinetAPI, CompartmentAPI } from "../services";
-import { Product, Cabinet, Compartment } from "../types";
+import { Product, Cabinet, Compartment, EntityType } from "../types";
 import { HorizontalDataMatrixLabel } from "../components/labels/HorizontalDataMatrixLabel";
 
 export default function LabelHubPage() {
@@ -91,7 +91,7 @@ export default function LabelHubPage() {
           (p as any).compartmentCode || p.compartment?.code || "—";
         return {
           id: p.id,
-          type: "PRODUCT" as const,
+          type: "product" as EntityType,
           code: p.dataMatrix,
           title: p.name,
           owner: p.owner || null,
@@ -103,7 +103,7 @@ export default function LabelHubPage() {
     } else if (activeTab === "compartments") {
       return compartments.map((cp) => ({
         id: cp.id,
-        type: "COMPARTMENT" as const,
+        type: "compartment" as EntityType,
         code: cp.dataMatrix,
         title: cp.code,
         owner: null,
@@ -114,7 +114,7 @@ export default function LabelHubPage() {
     } else {
       return cabinets.map((c) => ({
         id: c.id,
-        type: "CABINET" as const,
+        type: "cabinet" as EntityType,
         code: c.dataMatrix,
         title: c.code,
         owner: null,
