@@ -12,12 +12,12 @@ import {
   ChevronRight,
   Layers,
 } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 import { DataMatrixScannerModal } from "../components/scanner/DataMatrixScannerModal";
 import packageJson from "../../package.json";
 
 export default function MorePage() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const router = useRouter();
 

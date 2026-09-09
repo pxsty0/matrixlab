@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuthStore } from "../../store/authStore";
 import { RefreshCw, Clock, LogOut } from "lucide-react";
 
 export const ProtectedRoute = ({
@@ -10,7 +10,7 @@ export const ProtectedRoute = ({
   children: React.ReactNode;
   adminOnly?: boolean;
 }) => {
-  const { user, isAuthenticated, loading, logout, refreshUser } = useAuth();
+  const { user, isAuthenticated, loading, logout, refreshUser } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {

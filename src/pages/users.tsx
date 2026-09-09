@@ -12,12 +12,12 @@ import {
 } from "lucide-react";
 import { UserAPI } from "../services";
 import { User, UserRole } from "../types";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
 import { Modal } from "../components/common/Modal";
 
 export default function UsersPage() {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useAuthStore();
 
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);

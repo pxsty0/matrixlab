@@ -17,11 +17,11 @@ import {
   Menu,
 } from "lucide-react";
 import { DataMatrixScannerModal } from "../scanner/DataMatrixScannerModal";
-import { useAuth } from "../../context/AuthContext";
+import { useAuthStore } from "../../store/authStore";
 import packageJson from "../../../package.json";
 
 export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const router = useRouter();

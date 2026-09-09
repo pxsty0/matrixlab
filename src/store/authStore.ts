@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import { create } from "zustand";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -17,7 +11,7 @@ import { UserAPI } from "../services";
 import { User } from "../types";
 import { toast } from "react-toastify";
 
-interface AuthContextType {
+interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
@@ -29,15 +23,15 @@ interface AuthContextType {
   }) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  initializeAuth: () => () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isAuthenticated: false,
+  loading: true,
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const refreshUser = useCallback(async () => {
+  refreshUser: async () => {
     if (!auth.currentUser) return;
     try {
       const profile = await UserAPI.getProfile(
@@ -45,96 +39,82 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         auth.currentUser.email,
       );
       if (profile) {
-        setUser((prev) => (prev ? { ...prev, ...profile } : null));
+        set((state) => ({
+          user: state.user ? { ...state.user, ...profile } : null,
+          isAuthenticated: true,
+        }));
         toast.success("Yetki bilgileri güncellendi.");
       } else {
-        setUser(null);
+        set({ user: null, isAuthenticated: false });
         toast.error("Kullanıcı profili bulunamadı.");
       }
     } catch (err: any) {
-      setUser(null);
+      set({ user: null, isAuthenticated: false });
       toast.error("Yetki yenileme hatası: " + (err?.message || ""));
     }
-  }, []);
+  },
 
-  useEffect(() => {
-    let unsubscribe = () => {};
-    let isMounted = true;
-
-    if (isFirebaseConfigured()) {
-      try {
-        unsubscribe = onAuthStateChanged(
-          auth,
-          async (firebaseUser) => {
-            if (!isMounted) return;
-
-            if (firebaseUser) {
-              try {
-                const profile = await UserAPI.getProfile(
-                  firebaseUser.uid,
-                  firebaseUser.email,
-                );
-                if (!isMounted) return;
-
-                if (profile) {
-                  setUser(profile);
-                } else {
-                  setUser(null);
-                  toast.error(
-                    "Kullanıcı profili ve yetkilendirme bilgisi bulunamadı.",
-                  );
-                }
-              } catch (profileErr: any) {
-                setUser(null);
-                toast.error(
-                  "Yetkilendirme profili yüklenemedi: " +
-                    (profileErr?.message || "Hata oluştu"),
-                );
-              } finally {
-                if (isMounted) {
-                  setLoading(false);
-                }
-              }
-            } else {
-              setUser(null);
-              setLoading(false);
-            }
-          },
-          (error) => {
-            if (isMounted) {
-              setUser(null);
-              setLoading(false);
-              toast.error(
-                "Oturum kontrol hatası: " +
-                  (error?.message || "Bağlantı kurulamadı"),
-              );
-            }
-          },
-        );
-      } catch (err: any) {
-        toast.error(
-          "Oturum servisi başlatılamadı: " + (err?.message || "Hata"),
-        );
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    } else {
+  initializeAuth: () => {
+    if (!isFirebaseConfigured()) {
       toast.error(
         "Firebase yapılandırması eksik (.env dosyasını kontrol edin).",
       );
-      if (isMounted) {
-        setLoading(false);
-      }
+      set({ loading: false });
+      return () => {};
     }
 
-    return () => {
-      isMounted = false;
-      unsubscribe();
-    };
-  }, []);
+    try {
+      const unsubscribe = onAuthStateChanged(
+        auth,
+        async (firebaseUser) => {
+          if (firebaseUser) {
+            try {
+              const profile = await UserAPI.getProfile(
+                firebaseUser.uid,
+                firebaseUser.email,
+              );
 
-  const login = async (credentials: { email: string; password: string }) => {
+              if (profile) {
+                set({ user: profile, isAuthenticated: true });
+              } else {
+                set({ user: null, isAuthenticated: false });
+                toast.error(
+                  "Kullanıcı profili ve yetkilendirme bilgisi bulunamadı.",
+                );
+              }
+            } catch (profileErr: any) {
+              set({ user: null, isAuthenticated: false });
+              toast.error(
+                "Yetkilendirme profili yüklenemedi: " +
+                  (profileErr?.message || "Hata oluştu"),
+              );
+            } finally {
+              set({ loading: false });
+            }
+          } else {
+            set({ user: null, isAuthenticated: false, loading: false });
+          }
+        },
+        (error) => {
+          set({ user: null, isAuthenticated: false, loading: false });
+          toast.error(
+            "Oturum kontrol hatası: " +
+              (error?.message || "Bağlantı kurulamadı"),
+          );
+        },
+      );
+
+      return () => {
+        unsubscribe();
+      };
+    } catch (err: any) {
+      toast.error("Oturum servisi başlatılamadı: " + (err?.message || "Hata"));
+      set({ loading: false });
+      return () => {};
+    }
+  },
+
+  login: async (credentials) => {
     const email = credentials.email.trim().toLowerCase();
     const password = credentials.password.trim();
 
@@ -163,8 +143,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         );
       }
 
-      setUser(profile);
-      return;
+      set({ user: profile, isAuthenticated: true });
     } catch (fbErr: any) {
       if (
         fbErr.code === "auth/invalid-credential" ||
@@ -176,13 +155,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       throw new Error(fbErr.message || "Giriş yapılamadı.");
     }
-  };
+  },
 
-  const register = async (userData: {
-    email: string;
-    name: string;
-    password: string;
-  }) => {
+  register: async (userData) => {
     if (!isFirebaseConfigured()) {
       throw new Error(
         "Firebase yapılandırması bulunamadı. Lütfen .env dosyasını doldurun.",
@@ -221,7 +196,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role: "user",
       });
 
-      setUser(createdUser);
+      set({ user: createdUser, isAuthenticated: true });
     } catch (err: any) {
       if (err.code === "auth/email-already-in-use") {
         throw new Error("Bu e-posta adresi zaten kullanımda.");
@@ -234,9 +209,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       throw new Error(err.message || "Kayıt işlemi gerçekleştirilemedi.");
     }
-  };
+  },
 
-  const logout = async () => {
+  logout: async () => {
     if (isFirebaseConfigured()) {
       try {
         await firebaseSignOut(auth);
@@ -247,30 +222,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         );
       }
     }
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        loading,
-        login,
-        register,
-        logout,
-        refreshUser,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth, bir AuthProvider içerisinde kullanılmalıdır.");
-  }
-  return context;
-};
+    set({ user: null, isAuthenticated: false });
+  },
+}));

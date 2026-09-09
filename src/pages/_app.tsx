@@ -1,15 +1,23 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthProvider } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 import { AppLayout } from "../components/layout/AppLayout";
 import { ProtectedRoute } from "../components/common/ProtectedRoute";
 import "../index.css";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
+
+  useEffect(() => {
+    const unsubscribe = initializeAuth();
+    return () => unsubscribe();
+  }, [initializeAuth]);
+
   const isPublicPage =
     router.pathname === "/login" ||
     router.pathname === "/404" ||
@@ -26,17 +34,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
         />
       </Head>
-      <AuthProvider>
-        {isPublicPage ? (
-          <Component {...pageProps} />
-        ) : (
-          <ProtectedRoute adminOnly={router.pathname === "/users"}>
-            <AppLayout>
-              <Component {...pageProps} />
-            </AppLayout>
-          </ProtectedRoute>
-        )}
-      </AuthProvider>
+      {isPublicPage ? (
+        <Component {...pageProps} />
+      ) : (
+        <ProtectedRoute adminOnly={router.pathname === "/users"}>
+          <AppLayout>
+            <Component {...pageProps} />
+          </AppLayout>
+        </ProtectedRoute>
+      )}
       <ToastContainer
         position="top-right"
         autoClose={3500}

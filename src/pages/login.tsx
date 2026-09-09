@@ -9,11 +9,11 @@ import {
   UserPlus,
   LogIn,
 } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, register } = useAuth();
+  const { login, register } = useAuthStore();
 
   const from = typeof router.query.from === "string" ? router.query.from : "/";
 
