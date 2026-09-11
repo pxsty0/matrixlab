@@ -241,7 +241,6 @@ export default function UsersPage() {
                 <thead className="border-b border-zinc-200 bg-zinc-50/80 font-medium text-zinc-500 select-none">
                   <tr>
                     <th className="px-3 py-2.5">Kullanıcı / Personel</th>
-                    <th className="px-3 py-2.5">E-posta</th>
                     <th className="px-3 py-2.5">Rol</th>
                     <th className="px-3 py-2.5">Kayıt Tarihi</th>
                     <th className="px-3 py-2.5 text-right">İşlemler</th>
@@ -269,16 +268,10 @@ export default function UsersPage() {
                                 )}
                               </p>
                               <span className="font-mono text-[10px] text-zinc-400">
-                                @{u.username}
+                                {u.email}
                               </span>
                             </div>
                           </div>
-                        </td>
-
-                        <td className="px-3 py-3 text-zinc-600">
-                          <span className="font-mono text-[11px]">
-                            {u.email || "—"}
-                          </span>
                         </td>
 
                         <td className="px-3 py-3">{getRoleBadge(u.role)}</td>
