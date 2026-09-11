@@ -3,6 +3,10 @@ import { useRouter } from "next/router";
 import { renderDataMatrixToCanvas } from "../../utils/datamatrix";
 import { Printer } from "lucide-react";
 import { EntityType, ProductOwner } from "../../types";
+import {
+  DATAMATRIX_LABEL_HEIGHT_CM,
+  DATAMATRIX_LABEL_WIDTH_CM,
+} from "@/config/constants";
 
 export interface HorizontalLabelProps {
   type: EntityType;
@@ -59,7 +63,7 @@ export const HorizontalDataMatrixLabel = ({
   return (
     <div
       onClick={onToggleSelect}
-      className={`label-card relative box-border flex ${showActions ? "h-[4.5cm]" : "h-[4.2cm]"} w-[9cm] flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
+      className={`label-card relative box-border flex ${showActions ? `h-[${DATAMATRIX_LABEL_HEIGHT_CM + 0.4}cm]` : `h-[${DATAMATRIX_LABEL_HEIGHT_CM}cm]`} w-[${DATAMATRIX_LABEL_WIDTH_CM}cm] flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
         isSelected
           ? "border-zinc-900 opacity-100 shadow-xs ring-1 ring-zinc-900"
           : "border-dashed border-zinc-300 opacity-40 hover:border-zinc-400 hover:opacity-75 print:hidden"
