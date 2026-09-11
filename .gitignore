@@ -41,3 +41,5 @@ Thumbs.db
 # Capacitor / Mobile platform builds
 ios/
 android/
+
+.vercel
