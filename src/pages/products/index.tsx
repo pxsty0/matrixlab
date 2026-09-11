@@ -257,14 +257,14 @@ export default function ProductsPage() {
             </button>
           </form>
 
-          <div className="flex w-full items-center gap-2 md:w-auto">
+          <div className="grid w-full grid-cols-2 gap-2 md:w-auto md:grid-cols-4">
             <select
               value={selectedCabinetId}
               onChange={(e) => {
                 setSelectedCabinetId(e.target.value);
                 setSelectedCompartmentCode("");
               }}
-              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="">Tüm Dolaplar</option>
               {cabinets.map((c) => (
@@ -277,7 +277,7 @@ export default function ProductsPage() {
             <select
               value={selectedCompartmentCode}
               onChange={(e) => setSelectedCompartmentCode(e.target.value)}
-              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="">Tüm Raflar</option>
               {compartments
@@ -295,7 +295,7 @@ export default function ProductsPage() {
             <select
               value={zimmetFilter}
               onChange={(e) => setZimmetFilter(e.target.value as any)}
-              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="all">Zimmet: Tümü</option>
               <option value="assigned">Sadece Zimmetliler</option>
@@ -305,7 +305,7 @@ export default function ProductsPage() {
             <select
               value={selectedOwner}
               onChange={(e) => setSelectedOwner(e.target.value)}
-              className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-800 focus:ring-1 focus:ring-zinc-900 md:flex-none"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-800 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="all">Sahip: Tümü</option>
               <option value="unassigned_owner">Sahipsiz / Belirtilmemiş</option>
