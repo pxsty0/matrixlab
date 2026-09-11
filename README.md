@@ -12,7 +12,6 @@
   <a href="https://github.com/pxsty0/matrixlab/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="License: MIT" />
   </a>
-  <img src="https://img.shields.io/badge/Version-1.0.1-10b981?style=for-the-badge&logo=git&logoColor=white" alt="Version 1.0.1" />
   <img src="https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js 15" />
   <img src="https://img.shields.io/badge/React-19-22d3ee?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
   <img src="https://img.shields.io/badge/TypeScript-6-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
