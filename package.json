@@ -22,7 +22,7 @@
     "@capacitor/camera": "^8.2.3",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0",
-    "@capacitor/ios": "^8.5.0",
+    "@capacitor/ios": "^8.5.1",
     "bwip-js": "^4.5.1",
     "firebase": "^12.18.0",
     "html5-qrcode": "^2.3.8",
