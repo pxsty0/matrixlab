@@ -13,6 +13,7 @@ import {
   ExternalLink,
   LogOut,
   User as UserIcon,
+  Users,
   ShieldCheck,
   Menu,
 } from "lucide-react";
@@ -63,6 +64,11 @@ export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
       to: "/auditLogs",
       label: "Denetim Günlüğü",
       icon: History,
+    },
+    {
+      to: "/product-owners",
+      label: "Ürün Sahipleri",
+      icon: Users,
     },
     ...(user?.role === "admin"
       ? [

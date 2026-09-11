@@ -9,6 +9,7 @@ import {
   LogOut,
   ExternalLink,
   User as UserIcon,
+  Users,
   ChevronRight,
   Layers,
 } from "lucide-react";
@@ -89,6 +90,26 @@ export default function MorePage() {
                 </h3>
                 <p className="truncate text-[11px] text-zinc-500">
                   Ürün, dolap ve raf DataMatrix etiketlerini yazdır
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-zinc-400 group-hover:text-zinc-700" />
+          </Link>
+
+          <Link
+            href="/product-owners"
+            className="group flex items-center justify-between gap-3 p-3.5 transition hover:bg-zinc-50"
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-800 transition group-hover:bg-zinc-900 group-hover:text-white">
+                <Users className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-xs font-bold text-zinc-900">
+                  Ürün Sahipleri
+                </h3>
+                <p className="truncate text-[11px] text-zinc-500">
+                  Product Owner listesi ve bilgileri
                 </p>
               </div>
             </div>
