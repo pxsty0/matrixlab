@@ -20,7 +20,7 @@
   "dependencies": {
     "@capacitor/android": "^8.5.0",
     "@capacitor/camera": "^8.2.3",
-    "@capacitor/cli": "^8.5.0",
+    "@capacitor/cli": "^8.5.1",
     "@capacitor/core": "^8.5.0",
     "@capacitor/ios": "^8.5.0",
     "bwip-js": "^4.5.1",
