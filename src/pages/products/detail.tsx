@@ -150,7 +150,7 @@ export default function ProductDetailPage() {
     if (!product) return;
     setEditName(product.name);
     setEditSku(product.sku);
-    setEditOwner(product.owner || "");
+    setEditOwner(product.owner?.name || "");
     setEditDescription(product.description || "");
     setEditImageUrl(product.imageUrl || "");
     setIsEditModalOpen(true);
@@ -356,7 +356,7 @@ export default function ProductDetailPage() {
                 {product.sku}
               </span>
               <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
-                {product.owner}
+                {product.owner?.name}
               </span>
             </div>
 
@@ -964,8 +964,8 @@ export default function ProductDetailPage() {
               >
                 <option value="">Seçiniz (Zorunlu)...</option>
                 {PRODUCT_OWNERS.map((owner) => (
-                  <option key={owner} value={owner}>
-                    {owner}
+                  <option key={owner.name} value={owner.name}>
+                    {owner.name}
                   </option>
                 ))}
               </select>

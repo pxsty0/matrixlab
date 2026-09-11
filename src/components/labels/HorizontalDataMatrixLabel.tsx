@@ -2,12 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { renderDataMatrixToCanvas } from "../../utils/datamatrix";
 import { Printer } from "lucide-react";
-import { EntityType } from "../../types";
+import { EntityType, ProductOwner } from "../../types";
 
 export interface HorizontalLabelProps {
   type: EntityType;
   title: string;
-  owner?: string | null;
+  owner?: ProductOwner | null;
   cabinetCode?: string | null;
   compartmentCode?: string | null;
   code: string;
@@ -59,7 +59,7 @@ export const HorizontalDataMatrixLabel = ({
   return (
     <div
       onClick={onToggleSelect}
-      className={`label-card relative box-border flex flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
+      className={`label-card relative box-border flex ${showActions ? "h-[4.5cm]" : "h-[4.2cm]"} w-[9cm] flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
         isSelected
           ? "border-zinc-900 opacity-100 shadow-xs ring-1 ring-zinc-900"
           : "border-dashed border-zinc-300 opacity-40 hover:border-zinc-400 hover:opacity-75 print:hidden"
@@ -88,7 +88,7 @@ export const HorizontalDataMatrixLabel = ({
                 <div className="flex items-center gap-1 text-[10px] text-zinc-700 sm:text-[11px]">
                   <span className="font-medium text-zinc-500">Sahip:</span>
                   <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-semibold text-zinc-900">
-                    {owner}
+                    {owner.name}
                   </span>
                 </div>
               )}
@@ -130,9 +130,13 @@ export const HorizontalDataMatrixLabel = ({
         </div>
 
         <div className="flex w-24 shrink-0 flex-col items-center justify-center border-l border-dashed border-zinc-200 pl-2.5">
-          <span className="mb-1 rounded bg-zinc-900 px-1.5 py-0.5 text-center text-[8.5px] font-bold tracking-wider text-white uppercase shadow-2xs">
-            {typeLabelText}
-          </span>
+          {type === "product" ? (
+            <img src={owner?.logo} className="mb-1 h-[0.85cm] w-[0.85cm]" />
+          ) : (
+            <span className="mb-1 rounded bg-zinc-900 px-1.5 py-0.5 text-center text-[8.5px] font-bold tracking-wider text-white uppercase shadow-2xs">
+              {typeLabelText}
+            </span>
+          )}
           <div className="pointer-events-none flex items-center justify-center rounded bg-white p-0.5">
             <canvas ref={canvasRef} />
           </div>

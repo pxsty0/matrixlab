@@ -310,8 +310,8 @@ export default function ProductsPage() {
               <option value="all">Sahip: Tümü</option>
               <option value="unassigned_owner">Sahipsiz / Belirtilmemiş</option>
               {PRODUCT_OWNERS.map((owner) => (
-                <option key={owner} value={owner}>
-                  {owner}
+                <option key={owner.name} value={owner.name}>
+                  {owner.name}
                 </option>
               ))}
             </select>
@@ -370,7 +370,7 @@ export default function ProductsPage() {
             if (selectedOwner === "unassigned_owner") {
               if (prod.owner) return false;
             } else if (selectedOwner !== "all") {
-              if (prod.owner !== selectedOwner) return false;
+              if (prod.owner?.name !== selectedOwner) return false;
             }
             return true;
           });
@@ -428,7 +428,7 @@ export default function ProductsPage() {
                         </h4>
                         <div className="shrink-0">
                           <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
-                            {prod.owner}
+                            {prod.owner?.name}
                           </span>
                         </div>
                       </div>
@@ -541,7 +541,7 @@ export default function ProductsPage() {
                         </td>
                         <td className="p-3">
                           <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
-                            {prod.owner}
+                            {prod.owner?.name}
                           </span>
                         </td>
                         <td className="p-3 text-[11px] text-zinc-600">
@@ -646,8 +646,8 @@ export default function ProductsPage() {
               >
                 <option value="">Seçiniz (Zorunlu)...</option>
                 {PRODUCT_OWNERS.map((owner) => (
-                  <option key={owner} value={owner}>
-                    {owner}
+                  <option key={owner.name} value={owner.name}>
+                    {owner.name}
                   </option>
                 ))}
               </select>

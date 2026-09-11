@@ -132,7 +132,7 @@ export default function LabelHubPage() {
       (item) =>
         item.title.toLowerCase().includes(q) ||
         item.code.toLowerCase().includes(q) ||
-        (item.owner && item.owner.toLowerCase().includes(q)) ||
+        (item.owner?.name && item.owner.name.toLowerCase().includes(q)) ||
         (item.cabinetCode && item.cabinetCode.toLowerCase().includes(q)) ||
         (item.compartmentCode &&
           item.compartmentCode.toLowerCase().includes(q)) ||

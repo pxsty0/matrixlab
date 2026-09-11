@@ -1,2 +1,11 @@
-export const PRODUCT_OWNERS = ["default-owner"] as const;
-export type ProductOwner = (typeof PRODUCT_OWNERS)[number];
+export interface ProductOwner {
+  name: string;
+  logo: string;
+}
+
+export const PRODUCT_OWNERS: ProductOwner[] = [
+  {
+    name: "default-owner",
+    logo: "/favicon.png",
+  },
+];

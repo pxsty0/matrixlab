@@ -16,6 +16,7 @@ import {
   Cabinet,
   AuditLog,
   ProductOwner,
+  PRODUCT_OWNERS,
 } from "../types";
 import {
   cleanStr,
@@ -42,7 +43,13 @@ export const toProduct = (
     compartment,
     name: cleanStr(data.name),
     sku: cleanStr(data.sku).toUpperCase(),
-    owner: (data.owner as ProductOwner) || null,
+    owner:
+      typeof data.owner === "string"
+        ? PRODUCT_OWNERS.find((o) => o.name === data.owner) || {
+            name: data.owner,
+            logo: "",
+          }
+        : (data.owner as ProductOwner) || null,
     description: data.description ? cleanStr(data.description) : null,
     quantity: cleanNum(data.quantity, 0, 0),
     imageUrl: data.imageUrl ? cleanStr(data.imageUrl) : null,
@@ -202,7 +209,8 @@ export const ProductAPI = {
       formData.get("compartmentCode") || formData.get("compartmentId"),
     );
     const quantity = cleanNum(formData.get("quantity"), 0, 0);
-    const owner = (cleanStr(formData.get("owner")) as ProductOwner) || null;
+    const ownerStr = cleanStr(formData.get("owner"));
+    const owner = PRODUCT_OWNERS.find((o) => o.name === ownerStr) || null;
     const description = cleanStr(formData.get("description")) || null;
     const dataMatrix = cleanStr(formData.get("dataMatrix")) || sku;
     const imageUrl = cleanStr(formData.get("imageUrl")) || null;
@@ -221,7 +229,7 @@ export const ProductAPI = {
       compartmentCode,
       compartmentId: compartmentCode,
       quantity,
-      owner,
+      owner: owner?.name,
       description,
       dataMatrix,
       imageUrl,
@@ -236,7 +244,7 @@ export const ProductAPI = {
     addAuditEntry(
       batch,
       "PRODUCT_CREATE",
-      `Yeni ürün eklendi: "${name}" (${sku}) - Başlangıç Stoğu: ${quantity} adet, Raf: ${compartmentCode}, Sahip: ${owner || "Sahip Yok"}${description ? `, Açıklama: ${description}` : ""}`,
+      `Yeni ürün eklendi: "${name}" (${sku}) - Başlangıç Stoğu: ${quantity} adet, Raf: ${compartmentCode}, Sahip: ${owner?.name || "Sahip Yok"}${description ? `, Açıklama: ${description}` : ""}`,
       quantity,
       prodRef.id,
     );
@@ -265,8 +273,11 @@ export const ProductAPI = {
       updates.compartmentCode = cCode;
       updates.compartmentId = cCode;
     }
-    if (formData.has("owner"))
-      updates.owner = cleanStr(formData.get("owner")) || null;
+    if (formData.has("owner")) {
+      const ownerStr = cleanStr(formData.get("owner"));
+      updates.owner =
+        PRODUCT_OWNERS.find((o) => o.name === ownerStr)?.name || null;
+    }
     if (formData.has("description"))
       updates.description = cleanStr(formData.get("description")) || null;
     if (formData.has("quantity"))
@@ -293,10 +304,17 @@ export const ProductAPI = {
       updates.quantity !== existing.quantity
     )
       changes.push(`Stok: ${existing.quantity} ➔ ${updates.quantity}`);
-    if (updates.owner !== undefined && updates.owner !== existing.owner)
-      changes.push(
-        `Sahip: "${existing.owner || "-"}" ➔ "${updates.owner || "-"}"`,
-      );
+    if (updates.owner !== undefined && updates.owner !== existing.owner) {
+      const oldOwnerName =
+        typeof existing.owner === "string"
+          ? existing.owner
+          : existing.owner?.name || "-";
+      const newOwnerName =
+        typeof updates.owner === "string"
+          ? updates.owner
+          : updates.owner?.name || "-";
+      changes.push(`Sahip: "${oldOwnerName}" ➔ "${newOwnerName}"`);
+    }
 
     const stockDiff =
       updates.quantity !== undefined

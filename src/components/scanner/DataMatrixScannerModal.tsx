@@ -457,7 +457,7 @@ export const DataMatrixScannerModal = ({
                             </h4>
                             <div className="shrink-0">
                               <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-800">
-                                {prod.owner}
+                                {prod.owner?.name}
                               </span>
                             </div>
                           </div>
