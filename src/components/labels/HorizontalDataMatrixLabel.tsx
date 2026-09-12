@@ -79,7 +79,7 @@ export const HorizontalDataMatrixLabel = ({
             <>
               {sku && (
                 <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
-                  <span className="font-sans font-medium text-zinc-500">
+                  <span className="inline-block w-[42px] shrink-0 font-sans font-medium text-zinc-500">
                     SKU:
                   </span>
                   <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-semibold text-zinc-900">
@@ -90,7 +90,9 @@ export const HorizontalDataMatrixLabel = ({
 
               {owner && (
                 <div className="flex items-center gap-1 text-[10px] text-zinc-700 sm:text-[11px]">
-                  <span className="font-medium text-zinc-500">Sahip:</span>
+                  <span className="inline-block w-[42px] shrink-0 font-sans font-medium text-zinc-500">
+                    Sahip:
+                  </span>
                   <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-semibold text-zinc-900">
                     {owner.name}
                   </span>
@@ -99,7 +101,7 @@ export const HorizontalDataMatrixLabel = ({
 
               {cabinetCode && (
                 <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
-                  <span className="font-sans font-medium text-zinc-500">
+                  <span className="inline-block w-[42px] shrink-0 font-sans font-medium text-zinc-500">
                     Dolap:
                   </span>
                   <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-bold text-zinc-900">
@@ -110,7 +112,7 @@ export const HorizontalDataMatrixLabel = ({
 
               {compartmentCode && (
                 <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
-                  <span className="font-sans font-medium text-zinc-500">
+                  <span className="inline-block w-[42px] shrink-0 font-sans font-medium text-zinc-500">
                     Raf:
                   </span>
                   <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-bold text-zinc-900">
@@ -123,7 +125,7 @@ export const HorizontalDataMatrixLabel = ({
 
           {type === "compartment" && cabinetCode && (
             <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-700 sm:text-[11px]">
-              <span className="font-sans font-medium text-zinc-500">
+              <span className="inline-block w-[42px] shrink-0 font-sans font-medium text-zinc-500">
                 Dolap:
               </span>
               <span className="py-0.2 rounded border border-zinc-200/60 bg-zinc-50 px-1 font-bold text-zinc-900">
