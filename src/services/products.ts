@@ -181,7 +181,6 @@ export const ProductAPI = {
             id: d.id,
             productId: m.productId || id,
             type: m.type || "AUDIT",
-            actorName: m.actorName || m.userName || "",
             actorEmail: m.actorEmail || m.userEmail || "",
             details: m.details || m.note || "",
             change: cleanNum(m.change ?? m.quantity, 0),
@@ -392,7 +391,6 @@ export const ProductAPI = {
       createdLog = {
         id: logRef.id,
         type: movType,
-        actorName: actor.name,
         actorEmail: actor.email,
         details: detailMsg,
         change,
@@ -402,7 +400,6 @@ export const ProductAPI = {
 
       tx.set(logRef, {
         type: movType,
-        actorName: actor.name,
         actorEmail: actor.email,
         details: detailMsg,
         change,
@@ -457,7 +454,6 @@ export const ProductAPI = {
       createdLog = {
         id: logRef.id,
         type: "TRANSFER",
-        actorName: actor.name,
         actorEmail: actor.email,
         details: detailMsg,
         change: 0,
@@ -467,7 +463,6 @@ export const ProductAPI = {
 
       tx.set(logRef, {
         type: "TRANSFER",
-        actorName: actor.name,
         actorEmail: actor.email,
         details: detailMsg,
         change: 0,
@@ -565,7 +560,6 @@ export const ProductAPI = {
       const logRef = doc(collection(db, "auditLogs"));
       tx.set(logRef, {
         type: "OUT",
-        actorName: actor.name,
         actorEmail: actor.email,
         details: detailMsg,
         change: -delta,
@@ -607,7 +601,6 @@ export const ProductAPI = {
       const logRef = doc(collection(db, "auditLogs"));
       tx.set(logRef, {
         type: "IN",
-        actorName: actor.name,
         actorEmail: actor.email,
         details: detailMsg,
         change: returnQty,

@@ -254,7 +254,7 @@ export default function DashboardPage() {
                         {log.details}
                       </p>
                       <p className="mt-0.5 truncate text-[10px] text-zinc-400">
-                        {log.actorName || log.actorEmail || "Sistem"} •{" "}
+                        {log.actorEmail || "Sistem"} •{" "}
                         {new Date(log.createdAt).toLocaleDateString("tr-TR")}
                       </p>
                     </div>

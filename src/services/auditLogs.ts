@@ -32,7 +32,6 @@ export const AuditLogAPI = {
       return {
         id: d.id,
         type: data.type || "AUDIT",
-        actorName: data.actorName || "",
         actorEmail: data.actorEmail || "",
         details: data.details || "",
         change: cleanNum(data.change, 0),
@@ -97,7 +96,6 @@ export const AuditLogAPI = {
     const actor = getActor();
     await addDoc(collection(db, "auditLogs"), {
       type: input.type,
-      actorName: actor.name,
       actorEmail: actor.email,
       details: input.details,
       change: input.change ?? 0,

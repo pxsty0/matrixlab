@@ -3,6 +3,25 @@ import { PRODUCT_OWNERS, ProductOwner } from "../config/constants";
 export type UserRole = "admin" | "staff" | "user";
 export type EntityType = "product" | "compartment" | "cabinet";
 
+export type AuditLogType =
+  | "AUDIT"
+  | "IN"
+  | "OUT"
+  | "TRANSFER"
+  | "PRODUCT_CREATE"
+  | "PRODUCT_UPDATE"
+  | "PRODUCT_DELETE"
+  | "CABINET_CREATE"
+  | "CABINET_UPDATE"
+  | "CABINET_DELETE"
+  | "COMPARTMENT_CREATE"
+  | "COMPARTMENT_UPDATE"
+  | "COMPARTMENT_DELETE"
+  | "USER_CREATE"
+  | "USER_UPDATE"
+  | "USER_DELETE"
+  | "USER_ROLE_CHANGE";
+
 export interface User {
   id: string;
   username: string;
@@ -15,8 +34,7 @@ export interface User {
 
 export interface AuditLog {
   id: string;
-  type: string;
-  actorName: string;
+  type: AuditLogType;
   actorEmail: string;
   details: string;
   change?: number;
@@ -25,7 +43,7 @@ export interface AuditLog {
 }
 
 export interface CreateAuditLogInput {
-  type: string;
+  type: AuditLogType;
   details: string;
   change?: number;
   productId?: string | null;

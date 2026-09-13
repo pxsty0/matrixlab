@@ -71,7 +71,6 @@ export default function AuditLogsPage() {
     const q = search.toLowerCase();
     return (
       m.details.toLowerCase().includes(q) ||
-      m.actorName.toLowerCase().includes(q) ||
       m.actorEmail.toLowerCase().includes(q) ||
       m.type.toLowerCase().includes(q)
     );
@@ -328,11 +327,11 @@ export default function AuditLogsPage() {
                       </td>
 
                       <td className="p-3 whitespace-nowrap">
-                        {log.actorEmail || log.actorName ? (
+                        {log.actorEmail ? (
                           <div className="inline-flex items-center gap-1.5 rounded border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-800">
                             <UserIcon className="h-3 w-3 shrink-0 text-zinc-500" />
                             <span className="max-w-[160px] truncate font-mono font-medium">
-                              {log.actorName || log.actorEmail}
+                              {log.actorEmail}
                             </span>
                           </div>
                         ) : (

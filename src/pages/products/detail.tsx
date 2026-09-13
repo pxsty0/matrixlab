@@ -714,9 +714,9 @@ export default function ProductDetailPage() {
                         <span className="font-mono text-[11px] text-zinc-400">
                           {formattedDate}
                         </span>
-                        {(log.actorEmail || log.actorName) && (
+                        {log.actorEmail && (
                           <span className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[10px] font-medium text-zinc-700">
-                            {log.actorName || log.actorEmail}
+                            {log.actorEmail}
                           </span>
                         )}
                       </div>

@@ -1,5 +1,6 @@
 import { Timestamp, doc, collection } from "firebase/firestore";
 import { db, auth } from "../lib/firebase";
+import { AuditLogType } from "../types";
 
 export const toIsoDate = (val: unknown): string => {
   if (!val) return new Date().toISOString();
@@ -40,7 +41,7 @@ export const getActor = () => {
 
 export const addAuditEntry = (
   batchOrTx: { set: (ref: any, data: any) => any },
-  type: string,
+  type: AuditLogType,
   details: string,
   change = 0,
   productId?: string | null,
@@ -49,11 +50,7 @@ export const addAuditEntry = (
   const actor = getActor();
   batchOrTx.set(logRef, {
     type,
-    actorName: actor.name,
     actorEmail: actor.email,
-    actorId: actor.id,
-    userId: actor.id,
-    userEmail: actor.email,
     details,
     change: change ?? 0,
     productId: productId || null,
