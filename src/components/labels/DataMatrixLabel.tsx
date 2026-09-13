@@ -23,7 +23,7 @@ export interface HorizontalLabelProps {
   size?: "sm" | "md" | "lg";
 }
 
-export const HorizontalDataMatrixLabel = ({
+export const DataMatrixLabel = ({
   type,
   title,
   owner,
@@ -63,7 +63,13 @@ export const HorizontalDataMatrixLabel = ({
   return (
     <div
       onClick={onToggleSelect}
-      className={`label-card relative box-border flex ${showActions ? `h-[${DATAMATRIX_LABEL_HEIGHT_CM + 0.4}cm]` : `h-[${DATAMATRIX_LABEL_HEIGHT_CM}cm]`} w-[${DATAMATRIX_LABEL_WIDTH_CM}cm] flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
+      style={{
+        width: `${DATAMATRIX_LABEL_WIDTH_CM}cm`,
+        height: showActions
+          ? `${DATAMATRIX_LABEL_HEIGHT_CM + 0.4}cm`
+          : `${DATAMATRIX_LABEL_HEIGHT_CM}cm`,
+      }}
+      className={`label-card relative box-border flex flex-col justify-between overflow-hidden rounded-lg border bg-white text-left transition-all select-none ${
         isSelected
           ? "border-zinc-900 opacity-100 shadow-xs ring-1 ring-zinc-900"
           : "border-dashed border-zinc-300 opacity-40 hover:border-zinc-400 hover:opacity-75 print:hidden"

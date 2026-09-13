@@ -13,7 +13,7 @@ import {
 import { CabinetAPI, CompartmentAPI } from "../services";
 import { Cabinet, Compartment, EntityType } from "../types";
 import { Modal } from "../components/common/Modal";
-import { HorizontalDataMatrixLabel } from "../components/labels/HorizontalDataMatrixLabel";
+import { DataMatrixLabel } from "../components/labels/DataMatrixLabel";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
@@ -904,7 +904,7 @@ export default function StoragePage() {
         maxWidth="md"
       >
         {selectedLabel && (
-          <HorizontalDataMatrixLabel
+          <DataMatrixLabel
             type={selectedLabel.type}
             code={selectedLabel.code}
             title={selectedLabel.title}

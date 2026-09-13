@@ -10,8 +10,13 @@ import {
 } from "lucide-react";
 import { ProductAPI, CabinetAPI, CompartmentAPI } from "../services";
 import { Product, Cabinet, Compartment, EntityType } from "../types";
-import { HorizontalDataMatrixLabel } from "../components/labels/HorizontalDataMatrixLabel";
+import { DataMatrixLabel } from "../components/labels/DataMatrixLabel";
+import dynamic from "next/dynamic";
 
+const PDFDownloadButton = dynamic(
+  () => import("../components/labels/DataMatrixLabelPDF"),
+  { ssr: false },
+);
 export default function LabelHubPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<
@@ -145,16 +150,16 @@ export default function LabelHubPage() {
     selectedIds.has(item.id),
   ).length;
 
+  const selectedItemsForPDF = useMemo(() => {
+    return filteredItems.filter((item) => selectedIds.has(item.id));
+  }, [filteredItems, selectedIds]);
+
   const handleSelectAll = () => {
     setSelectedIds(new Set(filteredItems.map((item) => item.id)));
   };
 
   const handleClearSelection = () => {
     setSelectedIds(new Set());
-  };
-
-  const handleTriggerPrint = () => {
-    window.print();
   };
 
   if (error) {
@@ -186,14 +191,10 @@ export default function LabelHubPage() {
             </p>
           </div>
 
-          <button
-            onClick={handleTriggerPrint}
-            disabled={selectedCount === 0}
-            className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-800 active:scale-[0.98] disabled:opacity-40"
-          >
-            <Printer className="h-3.5 w-3.5" />
-            <span>Yazdır ({selectedCount} Etiket)</span>
-          </button>
+          <PDFDownloadButton
+            items={selectedItemsForPDF}
+            selectedCount={selectedCount}
+          />
         </div>
 
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
@@ -282,12 +283,12 @@ export default function LabelHubPage() {
             Aramanıza uygun etiket bulunamadı.
           </div>
         ) : (
-          <div className="print-sheet-grid grid grid-cols-1 gap-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-xs sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 print:grid-cols-2 print:gap-2 print:border-none print:p-0 print:shadow-none">
+          <div className="print-sheet-grid grid grid-cols-1 gap-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-xs sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
             {filteredItems.map((item) => {
               const isSelected = selectedIds.has(item.id);
 
               return (
-                <HorizontalDataMatrixLabel
+                <DataMatrixLabel
                   key={item.id}
                   type={item.type}
                   title={item.title}

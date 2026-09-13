@@ -18,7 +18,7 @@ import { Product, Cabinet, Compartment } from "../../types";
 import { PRODUCT_OWNERS } from "../../config/constants";
 import { Modal } from "../../components/common/Modal";
 import { ImagePreview } from "../../components/common/ImagePreview";
-import { HorizontalDataMatrixLabel } from "../../components/labels/HorizontalDataMatrixLabel";
+import { DataMatrixLabel } from "../../components/labels/DataMatrixLabel";
 import { toast } from "react-toastify";
 
 export default function ProductsPage() {
@@ -753,7 +753,7 @@ export default function ProductsPage() {
         maxWidth="md"
       >
         {labelModalProduct && (
-          <HorizontalDataMatrixLabel
+          <DataMatrixLabel
             type="product"
             title={labelModalProduct.name}
             owner={labelModalProduct.owner}

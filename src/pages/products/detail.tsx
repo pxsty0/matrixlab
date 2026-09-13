@@ -23,7 +23,7 @@ import {
 import { ProductAPI, CabinetAPI, CompartmentAPI } from "../../services";
 import { Product, Cabinet, Compartment } from "../../types";
 import { PRODUCT_OWNERS } from "../../config/constants";
-import { HorizontalDataMatrixLabel } from "../../components/labels/HorizontalDataMatrixLabel";
+import { DataMatrixLabel } from "../../components/labels/DataMatrixLabel";
 import { Modal } from "../../components/common/Modal";
 import { ImagePreview } from "../../components/common/ImagePreview";
 import { toast } from "react-toastify";
@@ -646,7 +646,7 @@ export default function ProductDetailPage() {
             <h4 className="border-b border-zinc-100 pb-1.5 text-xs font-semibold text-zinc-900">
               DataMatrix Ürün Etiketi
             </h4>
-            <HorizontalDataMatrixLabel
+            <DataMatrixLabel
               type="product"
               title={product.name}
               owner={product.owner}
