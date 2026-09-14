@@ -19,6 +19,7 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
 } from "lucide-react";
 import { ProductAPI, CabinetAPI, CompartmentAPI } from "../../services";
 import { Product, Cabinet, Compartment } from "../../types";
@@ -74,6 +75,9 @@ export default function ProductDetailPage() {
   const [isUnassignModalOpen, setIsUnassignModalOpen] = useState(false);
   const [unassignReturnNote, setUnassignReturnNote] = useState("");
   const [isSubmittingUnassign, setIsSubmittingUnassign] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchProduct = useCallback(async () => {
     if (!id) return;
@@ -261,20 +265,23 @@ export default function ProductDetailPage() {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!product) return;
-    if (
-      window.confirm(
-        `"${product.name}" ürününü silmek istediğinize emin misiniz?`,
-      )
-    ) {
-      try {
-        await ProductAPI.delete(product.id);
-        toast.success("Ürün başarıyla silindi.");
-        router.push("/products");
-      } catch (err: unknown) {
-        toast.error(err instanceof Error ? err.message : "Silinemedi");
-      }
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!product) return;
+    setIsDeleting(true);
+    try {
+      await ProductAPI.delete(product.id);
+      toast.success("Ürün başarıyla silindi.");
+      setIsDeleteModalOpen(false);
+      router.push("/products");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Silinemedi");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -1268,6 +1275,60 @@ export default function ProductDetailPage() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Ürünü Sil"
+        maxWidth="sm"
+      >
+        <div className="space-y-3">
+          <div className="flex items-start gap-2.5 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+            <div>
+              <p className="font-semibold">
+                "{product?.name}" ürününü silmek üzeresiniz.
+              </p>
+              <p className="mt-1 text-[11px] text-amber-800">
+                Bu işlem geri alınamaz. Ürün kalıcı olarak silinecektir.
+              </p>
+            </div>
+          </div>
+
+          <p className="text-xs text-zinc-600">
+            Ürünü silmek istediğinize emin misiniz?
+          </p>
+
+          <div className="flex items-center justify-end gap-2 border-t border-zinc-100 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsDeleteModalOpen(false)}
+              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-200"
+            >
+              Vazgeç
+            </button>
+
+            <button
+              type="button"
+              disabled={isDeleting}
+              onClick={handleConfirmDelete}
+              className="flex items-center gap-1.5 rounded-lg bg-rose-600 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-rose-700 disabled:opacity-50"
+            >
+              {isDeleting ? (
+                <>
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                  <span>Siliniyor...</span>
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span>Ürünü Sil</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );
