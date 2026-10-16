@@ -528,7 +528,7 @@ export default function StoragePage() {
                               <button
                                 onClick={() =>
                                   router.push(
-                                    `/products?compartmentCode=${comp.code}`,
+                                    `/products?cabinetId=${comp.cabinetId}&compartmentId=${comp.id}`,
                                   )
                                 }
                                 className="flex cursor-pointer items-center gap-1 text-[11px] font-medium text-zinc-800 hover:underline"

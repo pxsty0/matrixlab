@@ -74,19 +74,52 @@ export default function ProductsPage() {
     }
   }, [router.isReady, router.query]);
 
+  const syncFilterUrl = (cabinetId: string, compartmentId: string) => {
+    const nextQuery: Record<string, any> = { ...router.query };
+    delete nextQuery.compartmentCode;
+    delete nextQuery.compartmentId;
+    delete nextQuery.cabinetId;
+    if (cabinetId) nextQuery.cabinetId = cabinetId;
+    if (compartmentId) nextQuery.compartmentId = compartmentId;
+    router.replace({ pathname: router.pathname, query: nextQuery }, undefined, {
+      shallow: true,
+    });
+  };
+
   const fetchInitialData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const [prodsData, cabsData, compsData] = await Promise.all([
-        ProductAPI.getAll({
-          search: search || undefined,
-          cabinetId: selectedCabinetId || undefined,
-          compartmentCode: selectedCompartmentCode || undefined,
-        }),
+      const [cabsData, compsData] = await Promise.all([
         CabinetAPI.getAll(),
         CompartmentAPI.getAll(),
       ]);
+
+      let compFilter = selectedCompartmentCode;
+      let cabFilter = selectedCabinetId;
+      if (compFilter) {
+        const match =
+          compsData.find((c) => c.id === compFilter) ||
+          compsData.find(
+            (c) =>
+              c.code === compFilter.toUpperCase() &&
+              (!selectedCabinetId || c.cabinetId === selectedCabinetId),
+          );
+        compFilter = match?.id || "";
+        if (match) {
+          cabFilter = match.cabinetId;
+          if (match.id !== selectedCompartmentCode)
+            setSelectedCompartmentCode(match.id);
+          if (match.cabinetId !== selectedCabinetId)
+            setSelectedCabinetId(match.cabinetId);
+        }
+      }
+
+      const prodsData = await ProductAPI.getAll({
+        search: search || undefined,
+        cabinetId: cabFilter || undefined,
+        compartmentId: compFilter || undefined,
+      });
 
       setProducts(prodsData);
       setCabinets(cabsData);
@@ -263,6 +296,7 @@ export default function ProductsPage() {
               onChange={(e) => {
                 setSelectedCabinetId(e.target.value);
                 setSelectedCompartmentCode("");
+                syncFilterUrl(e.target.value, "");
               }}
               className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900"
             >
@@ -276,20 +310,23 @@ export default function ProductsPage() {
 
             <select
               value={selectedCompartmentCode}
-              onChange={(e) => setSelectedCompartmentCode(e.target.value)}
-              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900"
+              disabled={!selectedCabinetId}
+              onChange={(e) => {
+                const id = e.target.value;
+                setSelectedCompartmentCode(id);
+                syncFilterUrl(selectedCabinetId, id);
+              }}
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 font-mono text-xs text-zinc-800 focus:ring-1 focus:ring-zinc-900 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="">Tüm Raflar</option>
-              {compartments
-                .filter(
-                  (cp) =>
-                    !selectedCabinetId || cp.cabinetId === selectedCabinetId,
-                )
-                .map((cp) => (
-                  <option key={cp.id} value={cp.code}>
-                    {cp.code}
-                  </option>
-                ))}
+              {selectedCabinetId &&
+                compartments
+                  .filter((cp) => cp.cabinetId === selectedCabinetId)
+                  .map((cp) => (
+                    <option key={cp.id} value={cp.id}>
+                      {cp.code}
+                    </option>
+                  ))}
             </select>
 
             <select
