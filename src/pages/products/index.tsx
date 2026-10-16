@@ -155,15 +155,19 @@ export default function ProductsPage() {
     setFormOwner("");
     setFormDescription("");
     setFormQuantity(1);
-    setFormCabinetId(cabinets[0]?.id || "");
-    setFormCompartmentCode(
-      (typeof router.query.compartmentCode === "string" &&
-        router.query.compartmentCode) ||
-        (typeof router.query.compartmentId === "string" &&
-          router.query.compartmentId) ||
-        compartments[0]?.code ||
-        "",
-    );
+    const filterComp = selectedCompartmentCode
+      ? compartments.find((c) => c.id === selectedCompartmentCode)
+      : undefined;
+    if (filterComp) {
+      setFormCabinetId(filterComp.cabinetId);
+      setFormCompartmentCode(filterComp.code);
+    } else if (selectedCabinetId) {
+      setFormCabinetId(selectedCabinetId);
+      setFormCompartmentCode("");
+    } else {
+      setFormCabinetId(cabinets[0]?.id || "");
+      setFormCompartmentCode(compartments[0]?.code || "");
+    }
     setFormImageUrl("");
     setIsFormModalOpen(true);
   };
