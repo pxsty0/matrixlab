@@ -110,7 +110,7 @@ Dolap (D-01)
 
 ### Ön Gereksinimler
 
-- [Node.js](https://nodejs.org/) (v18 veya üzeri)
+- [Node.js](https://nodejs.org/) (v22 veya üzeri)
 - [npm](https://www.npmjs.com/) / [yarn](https://yarnpkg.com/) / [pnpm](https://pnpm.io/)
 - [Firebase Hesabı](https://console.firebase.google.com/) (Ücretsiz Spark planı yeterlidir)
 
